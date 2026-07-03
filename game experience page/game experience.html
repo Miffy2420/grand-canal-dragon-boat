@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味云竞渡 - 龙舟游戏2</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --cream: #fdfcf7;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 59, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 0 2rem;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .navbar .logo i {
+            color: var(--gold);
+            font-size: 1.7rem;
+        }
+
+        .navbar .logo span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-links li a {
+            display: inline-block;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.3px;
+            background: transparent;
+        }
+
+        .nav-links li a i {
+            margin-right: 8px;
+            font-size: 0.95rem;
+            color: var(--green-light);
+        }
+
+        .nav-links li a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .nav-links li a.active {
+            background: var(--gold);
+            color: var(--green-dark);
+            box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+        }
+
+        .nav-links li a.active i {
+            color: var(--green-dark);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links {
+                position: fixed;
+                top: 76px;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 59, 42, 0.96);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                flex-direction: column;
+                padding: 1.5rem 0 2rem;
+                gap: 0.3rem;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+                transform: translateY(-120%);
+                transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+                visibility: hidden;
+                opacity: 0;
+                border-radius: 0 0 24px 24px;
+            }
+            .nav-links.open {
+                transform: translateY(0);
+                visibility: visible;
+                opacity: 1;
+            }
+            .nav-links li a {
+                width: 80%;
+                text-align: center;
+                padding: 0.8rem 1.2rem;
+                font-size: 1.05rem;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-dragon"></i>
+            辉煌<span>足迹</span>
+            <span style="font-size:0.7rem; font-weight:400; color:rgba(255,255,255,0.7); margin-left:4px;">· 2026</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="切换导航菜单">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="../navigation page/navigation.html"><i class="fas fa-home"></i>首页</a></li>
+            <li><a href="../competition overview page/competition overview.html"><i class="fas fa-flag-checkered"></i>赛事概览</a></li>
+            <li><a href="../game experience page/game experience.html" class="active"><i class="fas fa-gamepad"></i>游戏体验</a></li>
+            <li><a href="../glories in statistics page/glories in statistics.html"><i class="fas fa-chart-line"></i>数说辉煌</a></li>
+            <li><a href="../canal scenery page/canal scenery.html"><i class="fas fa-mountain"></i>运河风光</a></li>
+        </ul>
+    </nav>
+
+    <!-- 背景图片（初始显示） -->
+    <div id="background">
+        <img src="3.png" alt="游戏背景" id="bg-image">
+        <video src="动态河流.mp4" id="bg-video" muted loop playsinline style="display: none;"></video>
+    </div>
+
+    <!-- 游戏引导语 -->
+    <div id="guide-text">
+        <img src="游戏开场语.png" alt="游戏引导语" id="guide-image">
+    </div>
+
+    <!-- 龙舟 -->
+    <div id="dragon-boat">
+        <img src="控制龙舟.png" alt="龙舟" id="boat-image">
+    </div>
+
+    <!-- 彩蛋容器 -->
+    <div id="egg-container"></div>
+
+    <!-- 彩蛋文字容器 -->
+    <div id="egg-text-container"></div>
+
+    <!-- 通关背景 -->
+    <div id="success-background">
+        <img src="恭喜通关.jpg" alt="恭喜通关" id="success-image">
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const navLinks = document.getElementById('navLinks');
+        const menuToggle = document.getElementById('menuToggle');
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = navLinks.classList.toggle('open');
+            menuToggle.setAttribute('aria-expanded', isOpen);
+            const icon = menuToggle.querySelector('i');
+            if (isOpen) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+        document.addEventListener('click', function(e) {
+            const isNav = navLinks.contains(e.target) || menuToggle.contains(e.target);
+            if (!isNav && navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                const icon = menuToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
+            }
+        });
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                const icon = menuToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
+            }
+        });
+    </script>
+</body>
+</html>

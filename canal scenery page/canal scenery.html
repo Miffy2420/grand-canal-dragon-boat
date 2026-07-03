@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运河风光</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        @font-face {
+            font-family: 'FZLiuGQKSJW';
+            src: url('FZLiuGQKSJW.TTF') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --cream: #fdfcf7;
+        }
+
+        body {
+            background-color: white;
+            min-height: 100vh;
+            width: 1550px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 59, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 0 2rem;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .navbar .logo i {
+            color: var(--gold);
+            font-size: 1.7rem;
+        }
+
+        .navbar .logo span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-links li a {
+            display: inline-block;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.3px;
+            background: transparent;
+        }
+
+        .nav-links li a i {
+            margin-right: 8px;
+            font-size: 0.95rem;
+            color: var(--green-light);
+        }
+
+        .nav-links li a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .nav-links li a.active {
+            background: var(--gold);
+            color: var(--green-dark);
+            box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+        }
+
+        .nav-links li a.active i {
+            color: var(--green-dark);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links {
+                position: fixed;
+                top: 76px;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 59, 42, 0.96);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                flex-direction: column;
+                padding: 1.5rem 0 2rem;
+                gap: 0.3rem;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+                transform: translateY(-120%);
+                transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+                visibility: hidden;
+                opacity: 0;
+                border-radius: 0 0 24px 24px;
+            }
+            .nav-links.open {
+                transform: translateY(0);
+                visibility: visible;
+                opacity: 1;
+            }
+            .nav-links li a {
+                width: 80%;
+                text-align: center;
+                padding: 0.8rem 1.2rem;
+                font-size: 1.05rem;
+                margin: 0 auto;
+            }
+        }
+
+        .main-content {
+            margin-top: 76px;
+        }
+
+        .container {
+            position: relative;
+            width: 1550px;
+            height: 1178px;
+            margin: 0 auto;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1426px;
+            height: 1178px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .background img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .map-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1426px;
+            height: 1178px;
+        }
+
+        .region {
+            position: absolute;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            cursor: pointer;
+        }
+
+        .region:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .region img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 南海诸岛位置 */
+        .nanhai {
+            position: absolute;
+            top: 950px;
+            left: 1346px;
+            width: 152px;
+            height: 200px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .nanhai img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 各省市位置 */
+        .anhui { top: 630px; left: 1054px; width: 134px; height: 164px; z-index: 2;}
+        .jiangsu { top: 609px; left: 1088px; width: 165px; height: 128px;z-index: 2; }
+        .shandong { top: 512px; left: 1049px; width: 190px; height: 119px; z-index: 2; }
+        .zhejiang { top: 736px; left: 1157px; width: 107px; height: 123px; z-index: 2; }
+        .henan { top: 576px; left: 931px; width: 163px; height: 160px; z-index: 2; }
+        .hebei { top: 365px; left: 1001px; width: 154px; height: 220px; z-index: 2; }
+        .tianjin { top: 442px; left: 1080px; width: 36px; height: 50px; z-index: 2; }
+        .beijing { top: 419px; left: 1045px; width: 47px; height: 50px; z-index: 2; }
+
+        /* 省市名称图层 - 位于最顶层 */
+        .names-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1550px;
+            height: 1178px;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .region-name {
+            position: absolute;
+            font-family: 'FZLiuGQKSJW', sans-serif;
+            font-size: 40px;
+            color: #ffef77;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 风光卡片图层 - 位于地图图层之上 */
+        .card-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            width: auto;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .card-modal img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-dragon"></i>
+            辉煌<span>足迹</span>
+            <span style="font-size:0.7rem; font-weight:400; color:rgba(255,255,255,0.7); margin-left:4px;">· 2026</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="切换导航菜单">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="../navigation page/navigation.html"><i class="fas fa-home"></i>首页</a></li>
+            <li><a href="../competition overview page/competition overview.html"><i class="fas fa-flag-checkered"></i>赛事概览</a></li>
+            <li><a href="../game experience page/game experience.html"><i class="fas fa-gamepad"></i>游戏体验</a></li>
+            <li><a href="../glories in statistics page/glories in statistics.html"><i class="fas fa-chart-line"></i>数说辉煌</a></li>
+            <li><a href="../canal scenery page/canal scenery.html" class="active"><i class="fas fa-mountain"></i>运河风光</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+    <div class="container">
+        <div class="background">
+            <img src="底图.png" alt="底图">
+        </div>
+        <div class="map-container">
+            <div class="nanhai">
+                <img src="南海诸岛.png" alt="南海诸岛">
+            </div>
+            <div class="region anhui" data-region="anhui">
+                <img src="安徽.png" alt="安徽">
+            </div>
+            <div class="region jiangsu" data-region="jiangsu">
+                <img src="江苏.png" alt="江苏">
+            </div>
+            <div class="region shandong" data-region="shandong">
+                <img src="山东.png" alt="山东">
+            </div>
+            <div class="region zhejiang" data-region="zhejiang">
+                <img src="浙江.png" alt="浙江">
+            </div>
+            <div class="region henan" data-region="henan">
+                <img src="河南.png" alt="河南">
+            </div>
+            <div class="region hebei" data-region="hebei">
+                <img src="河北.png" alt="河北">
+            </div>
+            <div class="region tianjin" data-region="tianjin">
+                <img src="天津.png" alt="天津">
+            </div>
+            <div class="region beijing" data-region="beijing">
+                <img src="北京.png" alt="北京">
+            </div>
+        </div>
+
+        <!-- 省市名称图层 -->
+        <div class="names-layer" id="namesLayer"></div>
+
+        <!-- 风光卡片模态框 -->
+        <div class="card-modal" id="cardModal">
+            <img src="" alt="风光卡片" id="cardImage">
+        </div>
+    </div>
+
+    <script>
+        const cardModal = document.getElementById('cardModal');
+        const cardImage = document.getElementById('cardImage');
+        const namesLayer = document.getElementById('namesLayer');
+
+        // 设置卡片高度为背景图片高度的45%
+        cardModal.style.height = (1178 * 0.45) + 'px';
+
+        const cardData = {
+            anhui: ['各省市风光卡片/安徽 (1).png', '各省市风光卡片/安徽 (2).png'],
+            jiangsu: ['各省市风光卡片/江苏 (1).png', '各省市风光卡片/江苏 (2).png'],
+            shandong: ['各省市风光卡片/山东 (1).png'],
+            zhejiang: ['各省市风光卡片/浙江 (1).png', '各省市风光卡片/浙江 (2).png'],
+            henan: ['各省市风光卡片/河南 (1).png'],
+            hebei: ['各省市风光卡片/河北 (1).png'],
+            tianjin: ['各省市风光卡片/天津 (1).png', '各省市风光卡片/天津 (2).png', '各省市风光卡片/天津 (3).png'],
+            beijing: ['各省市风光卡片/北京 (1).png', '各省市风光卡片/北京 (2).png', '各省市风光卡片/北京 (3).png']
+        };
+
+        const regionNames = {
+            anhui: '安徽',
+            jiangsu: '江苏',
+            shandong: '山东',
+            zhejiang: '浙江',
+            henan: '河南',
+            hebei: '河北',
+            tianjin: '天津',
+            beijing: '北京'
+        };
+
+        let currentRegion = null;
+        let currentCardIndex = 0;
+
+        // 创建省市名称元素
+        function createRegionNameElements() {
+            const regionElements = {
+                anhui: document.querySelector('.anhui'),
+                jiangsu: document.querySelector('.jiangsu'),
+                shandong: document.querySelector('.shandong'),
+                zhejiang: document.querySelector('.zhejiang'),
+                henan: document.querySelector('.henan'),
+                hebei: document.querySelector('.hebei'),
+                tianjin: document.querySelector('.tianjin'),
+                beijing: document.querySelector('.beijing')
+            };
+
+            for (const [regionKey, regionEl] of Object.entries(regionElements)) {
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'region-name';
+                nameSpan.textContent = regionNames[regionKey];
+                nameSpan.id = 'name-' + regionKey;
+
+                const rect = regionEl.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+
+                nameSpan.style.left = (rect.left - containerRect.left + rect.width + 10) + 'px';
+                nameSpan.style.top = (rect.top - containerRect.top + rect.height / 2) + 'px';
+                nameSpan.style.transform = 'translateY(-50%)';
+
+                namesLayer.appendChild(nameSpan);
+
+                // 添加悬停事件
+                regionEl.addEventListener('mouseenter', function() {
+                    nameSpan.style.opacity = '1';
+                });
+
+                regionEl.addEventListener('mouseleave', function() {
+                    nameSpan.style.opacity = '0';
+                });
+            }
+        }
+
+        // 页面加载后创建名称元素
+        window.addEventListener('load', createRegionNameElements);
+        window.addEventListener('resize', function() {
+            // 重新定位所有名称
+            document.querySelectorAll('.region-name').forEach(nameEl => {
+                const regionKey = nameEl.id.replace('name-', '');
+                const regionEl = document.querySelector('.region.' + regionKey);
+                const rect = regionEl.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+
+                nameEl.style.left = (rect.left - containerRect.left + rect.width + 10) + 'px';
+                nameEl.style.top = (rect.top - containerRect.top + rect.height / 2) + 'px';
+            });
+        });
+
+        // 点击省市图片
+        document.querySelectorAll('.region').forEach(region => {
+            region.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const regionName = this.dataset.region;
+                const cards = cardData[regionName];
+
+                // 如果点击的是当前显示的省市，切换卡片显示/隐藏
+                if (currentRegion === regionName && cardModal.style.display === 'block') {
+                    cardModal.style.display = 'none';
+                    currentRegion = null;
+                    currentCardIndex = 0;
+                } else {
+                    // 否则显示该省市的卡片
+                    currentRegion = regionName;
+                    currentCardIndex = 0;
+                    cardImage.src = cards[currentCardIndex];
+                    cardModal.style.display = 'block';
+                }
+            });
+        });
+
+        // 点击卡片切换下一张
+        cardModal.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const cards = cardData[currentRegion];
+            currentCardIndex = (currentCardIndex + 1) % cards.length;
+            cardImage.src = cards[currentCardIndex];
+        });
+
+        // 导航栏菜单逻辑
+        const navLinks = document.getElementById('navLinks');
+        const menuToggle = document.getElementById('menuToggle');
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = navLinks.classList.toggle('open');
+            menuToggle.setAttribute('aria-expanded', isOpen);
+            const icon = menuToggle.querySelector('i');
+            if (isOpen) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+        document.addEventListener('click', function(e) {
+            const isNav = navLinks.contains(e.target) || menuToggle.contains(e.target);
+            if (!isNav && navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                const icon = menuToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
+            }
+        });
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                const icon = menuToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
+            }
+        });
+    </script>
+    </div>
+</body>
+</html>
