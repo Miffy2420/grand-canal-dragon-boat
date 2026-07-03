@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2026中国辉煌足迹大运河龙舟活动</title>
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ----- 全局重置 & 基础 ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f5faf3;
+            color: #1e3a2f;
+            line-height: 1.6;
+        }
+
+        /* ----- 颜色变量 (绿色主调) ----- */
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --green-bg: #eaf8f0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --cream: #fdfcf7;
+            --shadow: 0 12px 40px rgba(15, 59, 42, 0.15);
+            --radius: 18px;
+        }
+
+        /* ----- 导航栏 (固定顶部) ----- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            box-shadow: 0 4px 30px rgba(15, 59, 42, 0.08);
+            border-bottom: 2px solid rgba(30, 107, 74, 0.15);
+            padding: 0 2rem;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--green-dark);
+            letter-spacing: 1px;
+        }
+
+        .navbar .logo i {
+            color: var(--green-bright);
+            font-size: 1.7rem;
+        }
+
+        .navbar .logo span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-links li a {
+            display: inline-block;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            color: var(--green-dark);
+            text-decoration: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.3px;
+            position: relative;
+            background: transparent;
+        }
+
+        .nav-links li a i {
+            margin-right: 8px;
+            font-size: 0.95rem;
+            color: var(--green-bright);
+            transition: color 0.25s;
+        }
+
+        .nav-links li a:hover {
+            background: var(--green-pale);
+            color: var(--green-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 107, 74, 0.12);
+        }
+
+        .nav-links li a:hover i {
+            color: var(--gold);
+        }
+
+        .nav-links li a.active {
+            background: var(--green-mid);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(30, 107, 74, 0.25);
+        }
+
+        .nav-links li a.active i {
+            color: #fff;
+        }
+
+        /* 移动端菜单按钮 */
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: var(--green-dark);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .menu-toggle:hover {
+            background: var(--green-pale);
+        }
+
+        /* ----- 封面导航页 ----- */
+        #hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: url('封面图.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            padding: 0 2rem;
+            overflow: hidden;
+        }
+
+        #hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 59, 42, 0.45) 0%, rgba(30, 107, 74, 0.35) 50%, rgba(58, 155, 110, 0.25) 100%);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .hero-icon {
+            margin-bottom: 1.2rem;
+            animation: fadeInUp 1s ease-out, iconPulse 3s ease-in-out infinite 1s;
+        }
+
+        .hero-icon i {
+            font-size: 4rem;
+            color: var(--gold-light);
+            text-shadow: 0 0 30px rgba(201, 168, 76, 0.5);
+            display: inline-block;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        .hero-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.2rem 0;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .divider-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+        }
+
+        .divider-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+
+        .hero-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path fill="%23ffffff" fill-opacity="0.15" d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 L1200,120 L0,120 Z"/></svg>');
+            background-size: 1200px 100px;
+            animation: waveFlow 8s linear infinite;
+        }
+
+        .hero-wave-1 {
+            bottom: 20px;
+            opacity: 0.3;
+            animation-duration: 10s;
+        }
+
+        .hero-wave-2 {
+            bottom: 0;
+            opacity: 0.2;
+            animation-duration: 15s;
+            animation-direction: reverse;
+        }
+
+        @keyframes waveFlow {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin-bottom: 0;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #fff 0%, #e8d5a3 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out 0.2s both;
+            line-height: 1.3;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            letter-spacing: 3px;
+            margin-bottom: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: bounce 2s infinite;
+        }
+
+        .hero-scroll i {
+            font-size: 2.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s;
+        }
+
+        .hero-scroll:hover i {
+            color: #fff;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* 封面页导航栏样式 */
+        .navbar.hero-nav {
+            background: rgba(15, 59, 42, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar.hero-nav .logo {
+            color: #fff;
+        }
+
+        .navbar.hero-nav .logo i {
+            color: var(--gold-light);
+        }
+
+        .navbar.hero-nav .nav-links li a {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .navbar.hero-nav .nav-links li a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .navbar.hero-nav .nav-links li a.active {
+            background: rgba(201, 168, 76, 0.9);
+            color: #fff;
+        }
+
+        .navbar.hero-nav .menu-toggle {
+            color: #fff;
+        }
+
+        .navbar.hero-nav .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ----- 响应式设计 ----- */
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 0 1.2rem;
+                height: 68px;
+            }
+            .hero-title {
+                font-size: 2.6rem;
+            }
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.9rem;
+                letter-spacing: 2px;
+            }
+            .hero-subtitle {
+                font-size: 0.95rem;
+                letter-spacing: 2px;
+            }
+            .hero-icon i {
+                font-size: 3rem;
+            }
+            .divider-line {
+                width: 40px;
+            }
+            .divider-dot {
+                width: 8px;
+                height: 8px;
+            }
+            .hero-decoration {
+                height: 100px;
+            }
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 68px;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.96);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                flex-direction: column;
+                padding: 1.5rem 0 2rem;
+                gap: 0.3rem;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+                border-bottom: 2px solid var(--green-pale);
+                transform: translateY(-120%);
+                transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+                visibility: hidden;
+                opacity: 0;
+                border-radius: 0 0 24px 24px;
+            }
+
+            .nav-links.open {
+                transform: translateY(0);
+                visibility: visible;
+                opacity: 1;
+            }
+
+            .nav-links li a {
+                width: 80%;
+                text-align: center;
+                padding: 0.8rem 1.2rem;
+                font-size: 1.05rem;
+                border-radius: 40px;
+                margin: 0 auto;
+            }
+
+            .nav-links li a i {
+                margin-right: 12px;
+            }
+
+            .navbar .logo {
+                font-size: 1.05rem;
+            }
+            .navbar .logo i {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.5rem;
+                letter-spacing: 1px;
+            }
+            .hero-subtitle {
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
+            .hero-icon i {
+                font-size: 2.5rem;
+            }
+            .divider-line {
+                width: 30px;
+            }
+            .divider-dot {
+                width: 6px;
+                height: 6px;
+            }
+            .hero-decoration {
+                height: 80px;
+            }
+            .navbar {
+                padding: 0 0.8rem;
+                height: 62px;
+            }
+            .nav-links {
+                top: 62px;
+            }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--green-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--green-light);
+            border-radius: 12px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--green-bright);
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== 导航栏 ===== -->
+    <nav class="navbar" role="navigation" aria-label="主导航">
+        <div class="logo">
+            <i class="fas fa-dragon"></i>
+            辉煌<span>足迹</span>
+            <span style="font-size:0.7rem; font-weight:400; color:var(--green-mid); margin-left:4px;">· 2026</span>
+        </div>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="切换导航菜单" aria-expanded="false">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <ul class="nav-links" id="navLinks" role="menubar">
+            <li role="none"><a href="../navigation page/navigation.html" role="menuitem"><i class="fas fa-home"></i>首页</a></li>
+            <li role="none"><a href="../competition overview page/competition overview.html" role="menuitem"><i class="fas fa-flag-checkered"></i>赛事概览</a></li>
+            <li role="none"><a href="../game experience page/game experience.html" role="menuitem"><i class="fas fa-gamepad"></i>游戏体验</a></li>
+            <li role="none"><a href="../glories in statistics page/glories in statistics.html" role="menuitem"><i class="fas fa-chart-line"></i>数说辉煌</a></li>
+            <li role="none"><a href="../canal scenery page/canal scenery.html" role="menuitem"><i class="fas fa-mountain"></i>运河风光</a></li>
+        </ul>
+    </nav>
+
+    <!-- ===== 封面导航页 ===== -->
+    <section id="hero-section">
+        <div class="hero-decoration">
+            <div class="hero-wave hero-wave-1"></div>
+            <div class="hero-wave hero-wave-2"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-icon"><i class="fas fa-dragon"></i></div>
+            <h1 class="hero-title">千帆竞渡争辉煌<br>运河风光续新章</h1>
+            <div class="hero-divider">
+                <span class="divider-dot"></span>
+                <span class="divider-line"></span>
+                <span class="divider-dot"></span>
+            </div>
+            <p class="hero-subtitle">2026 中国辉煌足迹大运河龙舟活动报道</p>
+        </div>
+
+    </section>
+
+    <!-- ===== JavaScript ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            const navLinks = document.getElementById('navLinks');
+            const menuToggle = document.getElementById('menuToggle');
+            const navAnchors = document.querySelectorAll('.nav-links a');
+            const navbar = document.querySelector('.navbar');
+            const heroSection = document.getElementById('hero-section');
+
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = navLinks.classList.toggle('open');
+                menuToggle.setAttribute('aria-expanded', isOpen);
+                const icon = menuToggle.querySelector('i');
+                icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+            });
+
+            navAnchors.forEach(anchor => {
+                anchor.addEventListener('click', function() {
+                    if (navLinks.classList.contains('open')) {
+                        navLinks.classList.remove('open');
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        menuToggle.querySelector('i').className = 'fas fa-bars';
+                    }
+                    navAnchors.forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            function updateNavbarStyle() {
+                if (heroSection) {
+                    const heroHeight = heroSection.offsetHeight;
+                    navbar.classList.toggle('hero-nav', window.scrollY < heroHeight - 80);
+                }
+            }
+
+            updateNavbarStyle();
+            window.addEventListener('scroll', updateNavbarStyle);
+
+            document.addEventListener('click', function(e) {
+                const isNav = navLinks.contains(e.target) || menuToggle.contains(e.target);
+                if (!isNav && navLinks.classList.contains('open')) {
+                    navLinks.classList.remove('open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.querySelector('i').className = 'fas fa-bars';
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768 && navLinks.classList.contains('open')) {
+                    navLinks.classList.remove('open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.querySelector('i').className = 'fas fa-bars';
+                }
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
