@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>运河风光 - 八省市美景</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --green-bg: #eaf8f0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --shadow-sm: 0 4px 12px rgba(15, 59, 42, 0.08);
+            --shadow-md: 0 8px 24px rgba(15, 59, 42, 0.12);
+            --shadow-lg: 0 16px 40px rgba(15, 59, 42, 0.18);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--green-bg);
+            color: var(--green-dark);
+            line-height: 1.7;
+            padding-bottom: clamp(60px, 16vw, 74px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 顶部标题栏 */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            height: clamp(44px, 12vw, 52px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(30, 107, 74, 0.1);
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .app-header h1 {
+            font-size: clamp(0.9rem, 3.8vw, 1rem);
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+
+        .app-header .back-btn {
+            position: absolute;
+            left: clamp(8px, 2.5vw, 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            width: clamp(32px, 9vw, 38px);
+            height: clamp(32px, 9vw, 38px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green-dark);
+            font-size: clamp(1rem, 3.5vw, 1.15rem);
+            border-radius: 50%;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .app-header .back-btn:active {
+            background: var(--green-pale);
+        }
+
+        /* 顶部banner */
+        .page-banner {
+            position: relative;
+            height: clamp(160px, 50vw, 200px);
+            background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-bright) 50%, var(--green-light) 100%);
+            overflow: hidden;
+        }
+
+        .page-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('../canal-scenery-page/空白中国地图矢量@1080x-8.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+        }
+
+        .page-banner-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+            padding: 0 clamp(16px, 5vw, 24px);
+        }
+
+        .page-banner-title {
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            font-weight: 800;
+            margin-bottom: clamp(6px, 2vw, 10px);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-banner-subtitle {
+            font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+            opacity: 0.9;
+        }
+
+        .page-banner-icon {
+            font-size: clamp(1.6rem, 6vw, 2.2rem);
+            margin-bottom: clamp(8px, 2.5vw, 12px);
+            color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(201, 168, 76, 0.5);
+        }
+
+        /* 装饰波浪 */
+        .wave-divider {
+            position: relative;
+            height: clamp(24px, 8vw, 32px);
+            margin-top: -1px;
+        }
+
+        .wave-divider svg {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: clamp(24px, 8vw, 32px);
+        }
+
+        /* 内容区 */
+        .content {
+            padding: 0 clamp(12px, 4vw, 16px);
+            margin-top: clamp(-16px, -4vw, -12px);
+            position: relative;
+            z-index: 5;
+        }
+
+        /* 地图概览 */
+        .map-overview {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: clamp(12px, 4vw, 16px);
+            margin-bottom: clamp(12px, 4vw, 16px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .map-overview-title {
+            font-size: clamp(0.9rem, 3.8vw, 1rem);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: clamp(8px, 3vw, 12px);
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 2vw, 10px);
+        }
+
+        .map-overview-title i {
+            color: var(--green-bright);
+        }
+
+        .mini-map {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: var(--green-bg);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 82%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-main img {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: contain;
+            opacity: 0.75;
+        }
+
+        .map-south-sea {
+            position: absolute;
+            bottom: 4%;
+            right: 3%;
+            width: 18%;
+            aspect-ratio: 2/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+        }
+
+        .map-south-sea img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.65;
+        }
+
+        .mini-map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 82%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .map-dot {
+            position: absolute;
+            width: clamp(8px, 2.4vw, 11px);
+            height: clamp(8px, 2.4vw, 11px);
+            background: var(--gold);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px rgba(201, 168, 76, 0.6);
+            animation: pulseDot 2s infinite;
+            cursor: pointer;
+            pointer-events: auto;
+            border: 2px solid #fff;
+            z-index: 2;
+        }
+
+        .map-dot.active {
+            background: var(--green-bright);
+            box-shadow: 0 0 10px rgba(58, 155, 110, 0.8);
+            z-index: 3;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { box-shadow: 0 0 8px rgba(201, 168, 76, 0.6); }
+            50% { box-shadow: 0 0 16px rgba(201, 168, 76, 0.9); }
+        }
+
+        .map-dot-label {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+            font-weight: 700;
+            color: var(--green-dark);
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.95);
+            padding: clamp(2px, 0.6vw, 3px) clamp(6px, 2vw, 8px);
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+        }
+
+        .map-dot-label::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .map-dot.active .map-dot-label {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 省市列表 */
+        .region-list-title {
+            font-size: clamp(0.95rem, 4vw, 1.05rem);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: clamp(10px, 3vw, 14px);
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 2vw, 10px);
+            padding: 0 clamp(2px, 0.8vw, 4px);
+        }
+
+        .region-list-title::before {
+            content: '';
+            width: clamp(3px, 1vw, 4px);
+            height: clamp(16px, 4.5vw, 20px);
+            background: linear-gradient(180deg, var(--green-bright), var(--green-mid));
+            border-radius: 2px;
+        }
+
+        .region-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 2.5vw, 12px);
+        }
+
+        .region-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .region-card:active {
+            transform: scale(0.98);
+        }
+
+        .region-card-header {
+            display: flex;
+            align-items: center;
+            padding: clamp(12px, 3.5vw, 16px) clamp(14px, 4vw, 18px);
+            gap: clamp(10px, 3vw, 14px);
+        }
+
+        .region-icon {
+            width: clamp(38px, 11vw, 48px);
+            height: clamp(38px, 11vw, 48px);
+            border-radius: clamp(10px, 3vw, 14px);
+            background: linear-gradient(135deg, var(--green-bright), var(--green-mid));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: clamp(0.95rem, 4vw, 1.15rem);
+            flex-shrink: 0;
+        }
+
+        .region-card:nth-child(1) .region-icon { background: linear-gradient(135deg, #e57373, #c62828); }
+        .region-card:nth-child(2) .region-icon { background: linear-gradient(135deg, #64b5f6, #1976d2); }
+        .region-card:nth-child(3) .region-icon { background: linear-gradient(135deg, #ffb74d, #f57c00); }
+        .region-card:nth-child(4) .region-icon { background: linear-gradient(135deg, #81c784, #388e3c); }
+        .region-card:nth-child(5) .region-icon { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
+        .region-card:nth-child(6) .region-icon { background: linear-gradient(135deg, #4dd0e1, #00838f); }
+        .region-card:nth-child(7) .region-icon { background: linear-gradient(135deg, #f06292, #c2185b); }
+        .region-card:nth-child(8) .region-icon { background: linear-gradient(135deg, #ffd54f, #f9a825); }
+
+        .region-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .region-name {
+            font-size: clamp(0.95rem, 4vw, 1.05rem);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: clamp(1px, 0.3vw, 3px);
+        }
+
+        .region-desc {
+            font-size: clamp(0.72rem, 3vw, 0.78rem);
+            color: #888;
+        }
+
+        .region-arrow {
+            color: #ccc;
+            font-size: clamp(0.8rem, 3.2vw, 0.9rem);
+        }
+
+        .region-preview {
+            display: flex;
+            gap: clamp(3px, 1vw, 5px);
+            padding: 0 clamp(14px, 4vw, 18px) clamp(12px, 3.5vw, 16px);
+        }
+
+        .region-preview img {
+            flex: 1;
+            height: clamp(50px, 16vw, 70px);
+            object-fit: cover;
+            border-radius: clamp(6px, 2vw, 8px);
+        }
+
+        .region-preview-more {
+            flex: 1;
+            height: clamp(50px, 16vw, 70px);
+            border-radius: clamp(6px, 2vw, 8px);
+            background: var(--green-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+            color: var(--green-bright);
+            font-weight: 600;
+        }
+
+        /* 详情弹窗 */
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .detail-modal.open {
+            transform: translateY(0);
+        }
+
+        .detail-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: clamp(10px, 3vw, 14px) clamp(14px, 4vw, 18px);
+            padding-top: calc(env(safe-area-inset-top) + clamp(10px, 3vw, 14px));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-header-title {
+            color: #fff;
+            font-size: clamp(0.9rem, 3.8vw, 1rem);
+            font-weight: 700;
+        }
+
+        .detail-close {
+            width: clamp(32px, 9vw, 40px);
+            height: clamp(32px, 9vw, 40px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .detail-close:active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* 卡片轮播 */
+        .card-carousel {
+            position: relative;
+            padding: clamp(16px, 5vw, 24px) 0;
+        }
+
+        .card-viewport {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .card-slide {
+            flex-shrink: 0;
+            width: 100%;
+            padding: 0 clamp(20px, 6vw, 28px);
+            box-sizing: border-box;
+        }
+
+        .card-slide img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            display: block;
+        }
+
+        .carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(16px, 5vw, 24px);
+            margin-top: clamp(16px, 5vw, 24px);
+        }
+
+        .carousel-btn {
+            width: clamp(38px, 11vw, 48px);
+            height: clamp(38px, 11vw, 48px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            font-size: clamp(1rem, 3.8vw, 1.2rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .carousel-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: clamp(6px, 2vw, 10px);
+        }
+
+        .carousel-dot {
+            width: clamp(6px, 2vw, 10px);
+            height: clamp(6px, 2vw, 10px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .carousel-dot.active {
+            background: var(--gold);
+            width: clamp(18px, 6vw, 26px);
+            border-radius: 4px;
+        }
+
+        .card-counter {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+            margin-top: clamp(8px, 2.5vw, 12px);
+            text-align: center;
+        }
+
+        .card-counter span {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* 详情介绍 */
+        .detail-info {
+            padding: clamp(16px, 5vw, 24px) clamp(20px, 6vw, 28px) clamp(32px, 10vw, 48px);
+            color: #fff;
+        }
+
+        .detail-info h3 {
+            font-size: clamp(1rem, 4.2vw, 1.15rem);
+            margin-bottom: clamp(8px, 2.5vw, 12px);
+            color: var(--gold-light);
+        }
+
+        .detail-info p {
+            font-size: clamp(0.85rem, 3.5vw, 0.9rem);
+            line-height: 1.8;
+            opacity: 0.85;
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: clamp(52px, 14vw, 64px);
+            padding-bottom: env(safe-area-inset-bottom);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border-top: 1px solid rgba(30, 107, 74, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(15, 59, 42, 0.06);
+        }
+
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #999;
+            font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+            gap: clamp(2px, 0.8vw, 4px);
+            transition: color 0.2s;
+            height: 100%;
+        }
+
+        .bottom-nav-item i { font-size: clamp(1rem, 4vw, 1.2rem); }
+
+        .bottom-nav-item.active {
+            color: var(--green-bright);
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: clamp(68px, 18vw, 88px);
+            right: clamp(12px, 4vw, 16px);
+            width: clamp(36px, 10vw, 44px);
+            height: clamp(36px, 10vw, 44px);
+            border-radius: 50%;
+            background: var(--green-bright);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--green-light); border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题栏 -->
+    <header class="app-header">
+        <button class="back-btn" onclick="history.back()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <h1>运河风光</h1>
+    </header>
+
+    <!-- 顶部banner -->
+    <div class="page-banner">
+        <div class="page-banner-content">
+            <div class="page-banner-icon"><i class="fas fa-mountain"></i></div>
+            <div class="page-banner-title">运河八省市风光</div>
+            <div class="page-banner-subtitle">穿越千年运河，领略两岸美景</div>
+        </div>
+    </div>
+
+    <!-- 波浪装饰 -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path fill="#eaf8f0" d="M0,60 C300,100 600,20 900,60 C1050,80 1150,50 1200,60 L1200,120 L0,120 Z"/>
+        </svg>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="content">
+        <!-- 地图概览 -->
+        <div class="map-overview">
+            <div class="map-overview-title">
+                <i class="fas fa-map-marked-alt"></i>
+                运河沿线地图
+            </div>
+            <div class="mini-map">
+                <div class="map-container">
+                    <div class="map-main">
+                        <img src="../canal-scenery-page/中国地图.png" alt="中国地图">
+                    </div>
+                    <div class="map-south-sea">
+                        <img src="../canal-scenery-page/南海诸岛.png" alt="南海诸岛">
+                    </div>
+                    <div class="mini-map-overlay" id="mapDots">
+                        <!-- 动态生成地图点 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 省市列表 -->
+        <h2 class="region-list-title">沿线省市风光</h2>
+        <div class="region-list" id="regionList">
+            <!-- 动态生成 -->
+        </div>
+    </div>
+
+    <div style="height: clamp(16px, 5vw, 24px);"></div>
+
+    <!-- 详情弹窗 -->
+    <div class="detail-modal" id="detailModal">
+        <div class="detail-header">
+            <span class="detail-header-title" id="detailTitle">风光详情</span>
+            <button class="detail-close" onclick="closeDetail()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="card-carousel">
+            <div class="card-viewport">
+                <div class="card-track" id="cardTrack">
+                    <!-- 动态生成卡片 -->
+                </div>
+            </div>
+            <div class="carousel-nav">
+                <button class="carousel-btn" onclick="prevCard()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="carousel-dots" id="carouselDots">
+                    <!-- 动态生成点 -->
+                </div>
+                <button class="carousel-btn" onclick="nextCard()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="card-counter">
+                <span id="currentCard">1</span> / <span id="totalCard">3</span>
+            </div>
+        </div>
+        <div class="detail-info" id="detailInfo">
+            <!-- 动态生成介绍 -->
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="competition-overview.html" class="bottom-nav-item">
+            <i class="fas fa-flag"></i>
+            <span>赛事</span>
+        </a>
+        <a href="game-experience.html" class="bottom-nav-item">
+            <i class="fas fa-gamepad"></i>
+            <span>游戏</span>
+        </a>
+        <a href="canal-scenery.html" class="bottom-nav-item active">
+            <i class="fas fa-image"></i>
+            <span>风光</span>
+        </a>
+        <a href="glories-in-statistics.html" class="bottom-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>数据</span>
+        </a>
+    </nav>
+
+    <!-- 返回顶部 -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 省市数据
+        const regions = [
+            {
+                id: 'beijing',
+                name: '北京',
+                desc: '大运河北起点 · 千年古都',
+                icon: 'fa-city',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/北京 (1).png',
+                    '../canal-scenery-page/各省市风光卡片/北京 (2).png',
+                    '../canal-scenery-page/各省市风光卡片/北京 (3).png'
+                ],
+                mapPos: { x: 75, y: 39 },
+                info: '北京是京杭大运河北起点，拥有白浮泉遗址等重要运河遗迹。作为千年古都，北京将运河文化与皇家园林、长城文化融为一体，形成独特的文化景观。'
+            },
+            {
+                id: 'tianjin',
+                name: '天津',
+                desc: '三岔河口 · 漕运重镇',
+                icon: 'fa-ship',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/天津 (1).png',
+                    '../canal-scenery-page/各省市风光卡片/天津 (2).png',
+                    '../canal-scenery-page/各省市风光卡片/天津 (3).png'
+                ],
+                mapPos: { x: 77, y: 41 },
+                info: '天津三岔河口是南运河、北运河与海河的交汇处，历史上是漕运的重要枢纽。天津因运河而兴，孕育了独特的码头文化和民俗风情。'
+            },
+            {
+                id: 'hebei',
+                name: '河北',
+                desc: '沧州谢家坝 · 运河瑰宝',
+                icon: 'fa-water',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/河北 (1).png'
+                ],
+                mapPos: { x: 74, y: 43 },
+                info: '河北段大运河拥有丰富的历史遗迹，沧州谢家坝是大运河重要的水利工程遗产，见证了古代劳动人民的智慧。'
+            },
+            {
+                id: 'shandong',
+                name: '山东',
+                desc: '南旺分水 · 运河之心',
+                icon: 'fa-mountain',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/山东 (1).png'
+                ],
+                mapPos: { x: 78, y: 49 },
+                info: '山东段大运河是全线海拔最高的河段，南旺分水枢纽被誉为"运河之心"，是古代水利工程的杰出代表。'
+            },
+            {
+                id: 'henan',
+                name: '河南',
+                desc: '开封州桥 · 北宋遗韵',
+                icon: 'fa-landmark',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/河南 (1).png'
+                ],
+                mapPos: { x: 70, y: 56 },
+                info: '河南开封是北宋都城，州桥遗址见证了汴河的繁华。《清明上河图》描绘的就是北宋东京汴河两岸的繁盛景象。'
+            },
+            {
+                id: 'anhui',
+                name: '安徽',
+                desc: '徽州文化 · 水乡古韵',
+                icon: 'fa-tree',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/安徽 (1).png',
+                    '../canal-scenery-page/各省市风光卡片/安徽 (2).png'
+                ],
+                mapPos: { x: 79, y: 60 },
+                info: '安徽段大运河连接江淮，孕育了独特的徽州文化。水乡古镇、徽派建筑与运河风光交相辉映，构成一幅幅美丽的画卷。'
+            },
+            {
+                id: 'jiangsu',
+                name: '江苏',
+                desc: '江南水乡 · 运河精华',
+                icon: 'fa-archway',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/江苏 (1).png',
+                    '../canal-scenery-page/各省市风光卡片/江苏 (2).png'
+                ],
+                mapPos: { x: 84, y: 58 },
+                info: '江苏段大运河是全线保存最完好、景色最秀美的河段之一。苏州、扬州、无锡等城市因运河而繁荣，留下了众多历史文化遗产。'
+            },
+            {
+                id: 'zhejiang',
+                name: '浙江',
+                desc: '拱宸桥畔 · 运河南端',
+                icon: 'fa-leaf',
+                images: [
+                    '../canal-scenery-page/各省市风光卡片/浙江 (1).png',
+                    '../canal-scenery-page/各省市风光卡片/浙江 (2).png'
+                ],
+                mapPos: { x: 85, y: 67 },
+                info: '浙江杭州拱宸桥是京杭大运河最南端的标志性建筑。杭州段运河融合了西湖文化、茶文化和丝绸文化，是运河南端的璀璨明珠。'
+            }
+        ];
+
+        let currentRegion = null;
+        let currentCardIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // 初始化地图点
+        function initMapDots() {
+            const mapDots = document.getElementById('mapDots');
+            regions.forEach(region => {
+                const dot = document.createElement('div');
+                dot.className = 'map-dot';
+                dot.style.left = region.mapPos.x + '%';
+                dot.style.top = region.mapPos.y + '%';
+                dot.innerHTML = `<span class="map-dot-label">${region.name}</span>`;
+                dot.onclick = (e) => {
+                    e.stopPropagation();
+                    // 切换当前点的标签显示状态
+                    const isActive = dot.classList.contains('active');
+                    // 先关闭所有标签
+                    document.querySelectorAll('.map-dot').forEach(d => d.classList.remove('active'));
+                    // 如果之前不是激活状态，则激活当前点
+                    if (!isActive) {
+                        dot.classList.add('active');
+                    }
+                };
+                mapDots.appendChild(dot);
+            });
+            // 点击地图空白处关闭所有标签
+            mapDots.addEventListener('click', (e) => {
+                if (e.target === mapDots || e.target.classList.contains('mini-map-overlay')) {
+                    document.querySelectorAll('.map-dot').forEach(d => d.classList.remove('active'));
+                }
+            });
+        }
+
+        // 初始化省市列表
+        function initRegionList() {
+            const list = document.getElementById('regionList');
+            regions.forEach(region => {
+                const card = document.createElement('div');
+                card.className = 'region-card';
+                card.onclick = () => openDetail(region.id);
+
+                let previewHtml = '';
+                const previewCount = Math.min(region.images.length, 3);
+                for (let i = 0; i < previewCount; i++) {
+                    previewHtml += `<img src="${region.images[i]}" alt="${region.name}">`;
+                }
+                if (region.images.length > 3) {
+                    previewHtml += `<div class="region-preview-more">+${region.images.length - 3}</div>`;
+                }
+
+                card.innerHTML = `
+                    <div class="region-card-header">
+                        <div class="region-icon"><i class="fas ${region.icon}"></i></div>
+                        <div class="region-info">
+                            <div class="region-name">${region.name}</div>
+                            <div class="region-desc">${region.desc}</div>
+                        </div>
+                        <i class="fas fa-chevron-right region-arrow"></i>
+                    </div>
+                    <div class="region-preview">${previewHtml}</div>
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        // 打开详情
+        function openDetail(regionId) {
+            const region = regions.find(r => r.id === regionId);
+            if (!region) return;
+
+            currentRegion = region;
+            currentCardIndex = 0;
+
+            document.getElementById('detailTitle').textContent = region.name + '风光';
+
+            // 生成卡片
+            const track = document.getElementById('cardTrack');
+            track.innerHTML = '';
+            region.images.forEach(img => {
+                const slide = document.createElement('div');
+                slide.className = 'card-slide';
+                slide.innerHTML = `<img src="${img}" alt="${region.name}风光">`;
+                track.appendChild(slide);
+            });
+
+            // 生成指示器
+            const dots = document.getElementById('carouselDots');
+            dots.innerHTML = '';
+            region.images.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => goToCard(i);
+                dots.appendChild(dot);
+            });
+
+            // 更新计数器
+            document.getElementById('totalCard').textContent = region.images.length;
+            document.getElementById('currentCard').textContent = 1;
+
+            // 更新介绍
+            document.getElementById('detailInfo').innerHTML = `
+                <h3><i class="fas fa-info-circle"></i> ${region.name}</h3>
+                <p>${region.info}</p>
+            `;
+
+            // 重置位置
+            track.style.transform = 'translateX(0)';
+
+            // 打开弹窗
+            document.getElementById('detailModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            // 添加触摸滑动
+            const viewport = document.querySelector('.card-viewport');
+            viewport.addEventListener('touchstart', handleTouchStart, { passive: true });
+            viewport.addEventListener('touchend', handleTouchEnd, { passive: true });
+        }
+
+        function closeDetail() {
+            document.getElementById('detailModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextCard();
+                } else {
+                    prevCard();
+                }
+            }
+        }
+
+        function prevCard() {
+            if (!currentRegion) return;
+            const total = currentRegion.images.length;
+            currentCardIndex = (currentCardIndex - 1 + total) % total;
+            updateCarousel();
+        }
+
+        function nextCard() {
+            if (!currentRegion) return;
+            const total = currentRegion.images.length;
+            currentCardIndex = (currentCardIndex + 1) % total;
+            updateCarousel();
+        }
+
+        function goToCard(index) {
+            currentCardIndex = index;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('cardTrack');
+            track.style.transform = `translateX(-${currentCardIndex * 100}%)`;
+
+            // 更新指示器
+            const dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentCardIndex);
+            });
+
+            // 更新计数器
+            document.getElementById('currentCard').textContent = currentCardIndex + 1;
+        }
+
+        // 返回顶部
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            backToTop.classList.toggle('show', window.scrollY > 300);
+        });
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 图片淡入效果
+        document.querySelectorAll('img').forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.4s ease';
+            img.onload = function() { this.style.opacity = '1'; };
+            if (img.complete) img.style.opacity = '1';
+        });
+
+        // 初始化
+        initMapDots();
+        initRegionList();
+    </script>
+</body>
+</html>

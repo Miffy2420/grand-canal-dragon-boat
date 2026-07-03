@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>趣味云竞渡 - 龙舟游戏</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            /* 响应式字号变量 */
+            --fs-title: clamp(1.4rem, 6vw, 1.8rem);
+            --fs-body: clamp(0.85rem, 3.5vw, 1rem);
+            --fs-data: clamp(1.4rem, 6vw, 1.8rem);
+            --fs-small: clamp(0.7rem, 2.8vw, 0.8rem);
+            --fs-header: clamp(0.85rem, 3.8vw, 0.95rem);
+            --fs-hint: clamp(0.78rem, 3.2vw, 0.85rem);
+            --size-boat: clamp(90px, 28vw, 140px);
+            --size-egg: clamp(45px, 13vw, 65px);
+            --size-btn: clamp(32px, 9vw, 36px);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            touch-action: none;
+        }
+
+        /* 顶部游戏栏 */
+        .game-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            padding-top: env(safe-area-inset-top);
+            background: linear-gradient(180deg, rgba(15, 59, 42, 0.85) 0%, rgba(15, 59, 42, 0.6) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            padding-top: calc(env(safe-area-inset-top) + 4px);
+        }
+
+        .game-header .back-btn {
+            width: var(--size-btn);
+            height: var(--size-btn);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.9rem, 4vw, 1rem);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .game-header .back-btn:active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .game-header .title {
+            color: #fff;
+            font-size: var(--fs-header);
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-header .progress-btn {
+            width: var(--size-btn);
+            height: var(--size-btn);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.9rem, 4vw, 1rem);
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-header .progress-btn:active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .progress-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: clamp(16px, 4.5vw, 18px);
+            height: clamp(16px, 4.5vw, 18px);
+            background: var(--gold);
+            color: #fff;
+            font-size: clamp(0.6rem, 2.5vw, 0.65rem);
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(15, 59, 42, 0.85);
+        }
+
+        /* 游戏背景 */
+        #game-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 1s ease;
+            opacity: 1;
+        }
+
+        #bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* 游戏引导 */
+        #guide-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+            width: 85%;
+            max-width: 340px;
+            text-align: center;
+        }
+
+        #guide-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: clamp(16px, 5vw, 20px);
+        }
+
+        .guide-tap-hint {
+            color: #fff;
+            font-size: var(--fs-body);
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+
+        .guide-tap-hint i {
+            margin-right: clamp(6px, 2vw, 8px);
+            color: var(--gold-light);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* 龙舟 */
+        #dragon-boat {
+            position: fixed;
+            left: 50%;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            width: var(--size-boat);
+            height: auto;
+            z-index: 5;
+            touch-action: none;
+            transition: filter 0.2s;
+        }
+
+        #dragon-boat:active {
+            filter: brightness(1.1);
+        }
+
+        #boat-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* 彩蛋容器 */
+        #egg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .egg {
+            position: absolute;
+            width: var(--size-egg);
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+            animation: eggFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes eggFloat {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-8px); }
+        }
+
+        .egg.show {
+            opacity: 1;
+        }
+
+        .egg.hide {
+            opacity: 0;
+        }
+
+        .egg.collected {
+            animation: collectPop 0.4s ease forwards;
+        }
+
+        @keyframes collectPop {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
+        /* 彩蛋文字 */
+        #egg-text-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        .egg-text {
+            position: absolute;
+            width: 65vw;
+            max-width: 280px;
+            height: auto;
+            max-height: 50vh;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateX(-50%) scale(0.8);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .egg-text.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .egg-text.hide {
+            opacity: 0;
+        }
+
+        /* 收集特效 */
+        .collect-effect {
+            position: fixed;
+            width: clamp(60px, 20vw, 80px);
+            height: clamp(60px, 20vw, 80px);
+            pointer-events: none;
+            z-index: 20;
+            transform: translate(-50%, -50%);
+        }
+
+        .collect-effect::before {
+            content: '+1';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold);
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translate(-50%, -50%); }
+            100% { opacity: 0; transform: translate(-50%, -150%); }
+        }
+
+        /* 通关界面 */
+        #success-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+            background: linear-gradient(160deg, #0f3b2a 0%, #1e6b4a 40%, #3a9b6e 100%);
+            overflow: hidden;
+        }
+
+        #success-background.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 装饰粒子 */
+        .success-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: clamp(6px, 2vw, 8px);
+            height: clamp(6px, 2vw, 8px);
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: particleFloat 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; width: clamp(5px, 1.5vw, 6px); height: clamp(5px, 1.5vw, 6px); }
+        .particle:nth-child(2) { left: 25%; top: 60%; animation-delay: 1s; width: clamp(8px, 2.5vw, 10px); height: clamp(8px, 2.5vw, 10px); }
+        .particle:nth-child(3) { left: 45%; top: 15%; animation-delay: 2s; width: clamp(4px, 1.3vw, 5px); height: clamp(4px, 1.3vw, 5px); }
+        .particle:nth-child(4) { left: 65%; top: 45%; animation-delay: 0.5s; width: clamp(6px, 2vw, 8px); height: clamp(6px, 2vw, 8px); }
+        .particle:nth-child(5) { left: 80%; top: 25%; animation-delay: 1.5s; width: clamp(5px, 1.8vw, 7px); height: clamp(5px, 1.8vw, 7px); }
+        .particle:nth-child(6) { left: 15%; top: 75%; animation-delay: 3s; width: clamp(7px, 2.3vw, 9px); height: clamp(7px, 2.3vw, 9px); }
+        .particle:nth-child(7) { left: 55%; top: 70%; animation-delay: 2.5s; width: clamp(5px, 1.5vw, 6px); height: clamp(5px, 1.5vw, 6px); }
+        .particle:nth-child(8) { left: 88%; top: 65%; animation-delay: 3.5s; width: clamp(9px, 2.8vw, 11px); height: clamp(9px, 2.8vw, 11px); }
+        .particle:nth-child(9) { left: 35%; top: 35%; animation-delay: 4s; width: clamp(4px, 1.3vw, 5px); height: clamp(4px, 1.3vw, 5px); }
+        .particle:nth-child(10) { left: 75%; top: 80%; animation-delay: 4.5s; width: clamp(5px, 1.8vw, 7px); height: clamp(5px, 1.8vw, 7px); }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.8; }
+        }
+
+        /* 装饰圆环 */
+        .success-rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .success-ring {
+            position: absolute;
+            border: 2px solid rgba(201, 168, 76, 0.2);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: ringPulse 3s ease-in-out infinite;
+        }
+
+        .success-ring:nth-child(1) { width: clamp(160px, 50vw, 200px); height: clamp(160px, 50vw, 200px); animation-delay: 0s; }
+        .success-ring:nth-child(2) { width: clamp(220px, 70vw, 280px); height: clamp(220px, 70vw, 280px); animation-delay: 0.5s; }
+        .success-ring:nth-child(3) { width: clamp(280px, 90vw, 360px); height: clamp(280px, 90vw, 360px); animation-delay: 1s; }
+
+        @keyframes ringPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.6; }
+        }
+
+        .success-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            z-index: 51;
+            width: 85%;
+            max-width: 340px;
+            animation: successPopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        @keyframes successPopIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .success-trophy {
+            font-size: clamp(3rem, 12vw, 4rem);
+            margin-bottom: clamp(12px, 4vw, 16px);
+            filter: drop-shadow(0 4px 15px rgba(201, 168, 76, 0.5));
+            animation: trophyBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes trophyBounce {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .success-title {
+            font-size: var(--fs-title);
+            font-weight: 800;
+            margin-bottom: clamp(6px, 2vw, 8px);
+            background: linear-gradient(135deg, #fdf6e3 0%, #e8d5a3 50%, #c9a84c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .success-subtitle {
+            font-size: clamp(0.75rem, 3vw, 0.9rem);
+            opacity: 0.7;
+            margin-bottom: clamp(20px, 6vw, 24px);
+            letter-spacing: 1px;
+        }
+
+        .success-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2.5vw, 10px);
+            margin-bottom: clamp(20px, 6vw, 24px);
+        }
+
+        .success-divider-line {
+            width: clamp(30px, 10vw, 40px);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.6), transparent);
+        }
+
+        .success-divider-icon {
+            color: var(--gold);
+            font-size: clamp(0.7rem, 3vw, 0.8rem);
+        }
+
+        .success-desc {
+            font-size: var(--fs-body);
+            margin-bottom: clamp(24px, 7vw, 28px);
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .success-stats {
+            display: flex;
+            justify-content: center;
+            gap: clamp(12px, 5vw, 20px);
+            margin-bottom: clamp(24px, 8vw, 32px);
+            padding: clamp(16px, 5vw, 20px) clamp(12px, 4vw, 16px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .success-stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .success-stat-icon {
+            font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+            margin-bottom: clamp(4px, 1.5vw, 6px);
+            color: var(--gold-light);
+        }
+
+        .success-stat-number {
+            font-size: var(--fs-data);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fdf6e3, #c9a84c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            margin-bottom: clamp(2px, 1vw, 4px);
+        }
+
+        .success-stat-label {
+            font-size: var(--fs-small);
+            opacity: 0.75;
+        }
+
+        .success-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(10px, 3vw, 12px);
+            align-items: center;
+        }
+
+        .success-btn {
+            display: block;
+            width: 100%;
+            max-width: 260px;
+            padding: clamp(12px, 3.5vw, 14px) clamp(24px, 7vw, 30px);
+            background: linear-gradient(135deg, var(--gold), #a88a32);
+            color: var(--green-dark);
+            font-size: var(--fs-body);
+            font-weight: 700;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(201, 168, 76, 0.4);
+            transition: all 0.25s;
+            cursor: pointer;
+            text-align: center;
+            box-sizing: border-box;
+            line-height: 1.4;
+        }
+
+        .success-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* 进度面板 */
+        .progress-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 320px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 200;
+            transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .progress-panel.open {
+            right: 0;
+        }
+
+        .progress-panel-header {
+            padding: clamp(12px, 4vw, 16px);
+            padding-top: calc(env(safe-area-inset-top) + clamp(12px, 4vw, 16px));
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 1;
+        }
+
+        .progress-panel-header h3 {
+            font-size: clamp(0.9rem, 4vw, 1rem);
+            color: var(--green-dark);
+        }
+
+        .close-panel {
+            width: clamp(28px, 8vw, 32px);
+            height: clamp(28px, 8vw, 32px);
+            border-radius: 50%;
+            background: #f5f5f5;
+            border: none;
+            font-size: clamp(0.9rem, 3.8vw, 1rem);
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-list {
+            padding: clamp(10px, 3vw, 12px) clamp(12px, 4vw, 16px);
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 3vw, 12px);
+            padding: clamp(8px, 2.5vw, 10px);
+            border-radius: 10px;
+            margin-bottom: clamp(6px, 2vw, 8px);
+            background: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        .progress-item.collected {
+            background: linear-gradient(135deg, rgba(58, 155, 110, 0.1), rgba(30, 107, 74, 0.1));
+        }
+
+        .progress-item img {
+            width: clamp(36px, 10vw, 40px);
+            height: clamp(36px, 10vw, 40px);
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .progress-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .progress-item-name {
+            font-size: clamp(0.8rem, 3.3vw, 0.85rem);
+            font-weight: 600;
+            color: var(--green-dark);
+            margin-bottom: 2px;
+        }
+
+        .progress-item-status {
+            font-size: clamp(0.68rem, 2.8vw, 0.72rem);
+            color: #999;
+        }
+
+        .progress-item.collected .progress-item-status {
+            color: var(--green-bright);
+        }
+
+        .progress-item i {
+            color: #ddd;
+            font-size: clamp(1rem, 4vw, 1.1rem);
+        }
+
+        .progress-item.collected i {
+            color: var(--green-bright);
+        }
+
+        /* 操作提示 */
+        .control-hint {
+            position: fixed;
+            top: 58%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            padding: clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px);
+            border-radius: 24px;
+            font-size: var(--fs-hint);
+            z-index: 8;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-hint.show {
+            opacity: 1;
+        }
+
+        .control-hint i {
+            margin-right: clamp(4px, 1.5vw, 6px);
+            color: var(--gold-light);
+        }
+
+        /* 遮罩 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 底部安全区 */
+        .safe-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: env(safe-area-inset-bottom);
+            background: transparent;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部游戏栏 -->
+    <div class="game-header">
+        <button class="back-btn" onclick="window.location.href='index.html'">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="title">趣味云竞渡</span>
+        <button class="progress-btn" onclick="toggleProgressPanel()">
+            <i class="fas fa-map-marker-alt"></i>
+            <span class="progress-badge" id="progressBadge">0</span>
+        </button>
+    </div>
+
+    <!-- 游戏区域 -->
+    <div id="game-area">
+        <img src="../game-experience-page/3.png" alt="游戏背景" id="bg-image">
+        <video src="../game-experience-page/动态河流.mp4" id="bg-video" muted loop playsinline></video>
+    </div>
+
+    <!-- 游戏引导 -->
+    <div id="guide-text">
+        <img src="../game-experience-page/游戏开场语.png" alt="游戏开场语" id="guide-image">
+        <div class="guide-tap-hint">
+            <i class="fas fa-hand-pointer"></i>
+            点击屏幕开始游戏
+        </div>
+    </div>
+
+    <!-- 龙舟 -->
+    <div id="dragon-boat">
+        <img src="../game-experience-page/控制龙舟.png" alt="龙舟" id="boat-image">
+    </div>
+
+    <!-- 彩蛋容器 -->
+    <div id="egg-container"></div>
+
+    <!-- 彩蛋文字容器 -->
+    <div id="egg-text-container"></div>
+
+    <!-- 操作提示 -->
+    <div class="control-hint" id="controlHint">
+        <i class="fas fa-arrows-alt"></i>
+        滑动屏幕控制龙舟移动
+    </div>
+
+    <!-- 通关界面 -->
+    <div id="success-background">
+        <div class="success-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="success-rings">
+            <div class="success-ring"></div>
+            <div class="success-ring"></div>
+            <div class="success-ring"></div>
+        </div>
+        <div class="success-content">
+            <div class="success-trophy">🏆</div>
+            <div class="success-title">恭喜通关</div>
+            <div class="success-subtitle">CONGRATULATIONS</div>
+            <div class="success-divider">
+                <span class="success-divider-line"></span>
+                <i class="fas fa-star success-divider-icon"></i>
+                <span class="success-divider-line"></span>
+            </div>
+            <div class="success-desc">你已成功解锁大运河沿线<br>所有文化地标</div>
+            <div class="success-stats">
+                <div class="success-stat">
+                    <div class="success-stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="success-stat-number" id="successCount">6</div>
+                    <div class="success-stat-label">文化地标</div>
+                </div>
+                <div class="success-stat">
+                    <div class="success-stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="success-stat-number">100%</div>
+                    <div class="success-stat-label">完成度</div>
+                </div>
+            </div>
+            <div class="success-btn-group">
+                <button class="success-btn" onclick="restartGame()">
+                    <i class="fas fa-redo"></i> 再玩一次
+                </button>
+                <a href="index.html" class="success-btn" style="background: rgba(255, 255, 255, 0.15); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); text-align: center;">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 进度面板遮罩 -->
+    <div class="overlay" id="panelOverlay" onclick="toggleProgressPanel()"></div>
+
+    <!-- 进度面板 -->
+    <div class="progress-panel" id="progressPanel">
+        <div class="progress-panel-header">
+            <h3>收集进度</h3>
+            <button class="close-panel" onclick="toggleProgressPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="progress-list" id="progressList">
+            <!-- 动态生成 -->
+        </div>
+    </div>
+
+    <div class="safe-bottom"></div>
+
+    <script>
+        // 游戏状态
+        const gameState = {
+            isGameStarted: false,
+            isDragging: false,
+            currentEggIndex: 0,
+            activeEggs: [],
+            appearedEggs: new Set(),
+            collectedEggs: 0,
+            boatInitialX: 0,
+            boatInitialY: 0,
+            spawnTimeout: null,
+            batchSpawned: 0,
+            boatAngle: 0,
+            lastTouchX: 0,
+            touchVelocityX: 0
+        };
+
+        // 彩蛋数据 - 6个文化地标 + 4个可重复道具
+        const eggs = [
+            { image: '../game-experience-page/白浮泉遗址.png', textImage: '../game-experience-page/解锁地点/白浮泉遗址.png', name: '白浮泉遗址', isLandmark: true },
+            { image: '../game-experience-page/沧州谢家坝.png', textImage: '../game-experience-page/解锁地点/沧州谢家坝.png', name: '沧州谢家坝', isLandmark: true },
+            { image: '../game-experience-page/杭州拱宸桥.png', textImage: '../game-experience-page/解锁地点/杭州拱宸桥.png', name: '杭州拱宸桥', isLandmark: true },
+            { image: '../game-experience-page/开封州桥.png', textImage: '../game-experience-page/解锁地点/开封州桥.png', name: '开封州桥', isLandmark: true },
+            { image: '../game-experience-page/南旺分水口.png', textImage: '../game-experience-page/解锁地点/南旺分水口.png', name: '南旺分水口', isLandmark: true },
+            { image: '../game-experience-page/天津三岔口.png', textImage: '../game-experience-page/解锁地点/天津三岔口.png', name: '天津三岔口', isLandmark: true },
+            { image: '../game-experience-page/龙舟粽.png', textImage: '../game-experience-page/粽子和船/定胜糕.png', name: '龙舟粽', isLandmark: false },
+            { image: '../game-experience-page/普通粽.png', textImage: '../game-experience-page/粽子和船/定胜糕.png', name: '普通粽', isLandmark: false },
+            { image: '../game-experience-page/漕运古船1.png', textImage: '../game-experience-page/粽子和船/漕运古船.png', name: '漕运古船', isLandmark: false },
+            { image: '../game-experience-page/漕运古船2.png', textImage: '../game-experience-page/粽子和船/漕运古船.png', name: '漕运古船', isLandmark: false }
+        ];
+
+        const guideText = document.getElementById('guide-text');
+        const dragonBoat = document.getElementById('dragon-boat');
+        const eggContainer = document.getElementById('egg-container');
+        const eggTextContainer = document.getElementById('egg-text-container');
+        const successBackground = document.getElementById('success-background');
+        const bgImage = document.getElementById('bg-image');
+        const bgVideo = document.getElementById('bg-video');
+        const controlHint = document.getElementById('controlHint');
+        const progressBadge = document.getElementById('progressBadge');
+
+        // 辅助函数：模拟 CSS clamp()
+        function cssClamp(min, preferred, max) {
+            return Math.max(min, Math.min(preferred, max));
+        }
+
+        // 计算龙舟实际尺寸（对应 CSS 的 clamp(90px, 28vw, 140px)）
+        function getBoatSize() {
+            return cssClamp(90, window.innerWidth * 0.28, 140);
+        }
+
+        // 计算彩蛋实际尺寸（对应 CSS 的 clamp(45px, 13vw, 65px)）
+        function getEggSize() {
+            return cssClamp(45, window.innerWidth * 0.13, 65);
+        }
+
+        // 获取顶部导航栏实际高度（含安全区）
+        function getHeaderHeight() {
+            const header = document.querySelector('.game-header');
+            if (header) {
+                return header.offsetHeight;
+            }
+            return 50;
+        }
+
+        // 获取底部安全区高度
+        function getSafeBottom() {
+            const safeEl = document.querySelector('.safe-bottom');
+            if (safeEl) {
+                return safeEl.offsetHeight;
+            }
+            return 0;
+        }
+
+        let boatWidth = getBoatSize();
+        let boatHeight = boatWidth * 0.4;
+
+        const moveBounds = {
+            vertical: Math.min(350, window.innerHeight * 0.38),
+            horizontal: cssClamp(100, window.innerWidth * 0.42, 350)
+        };
+
+        // 初始化进度列表
+        // 初始化龙舟位置
+        function initBoatPosition() {
+            const boatRect = dragonBoat.getBoundingClientRect();
+            gameState.boatInitialX = boatRect.left + boatRect.width / 2;
+            gameState.boatInitialY = boatRect.top + boatRect.height / 2;
+            boatWidth = boatRect.width;
+            boatHeight = boatRect.height;
+        }
+
+        function initProgressList() {
+            const list = document.getElementById('progressList');
+            list.innerHTML = '';
+            eggs.forEach((egg, index) => {
+                if (egg.isLandmark) {
+                    const item = document.createElement('div');
+                    item.className = 'progress-item';
+                    item.id = 'progress-item-' + index;
+                    item.innerHTML = `
+                        <img src="${egg.image}" alt="${egg.name}">
+                        <div class="progress-item-info">
+                            <div class="progress-item-name">${egg.name}</div>
+                            <div class="progress-item-status">未解锁</div>
+                        </div>
+                        <i class="fas fa-lock"></i>
+                    `;
+                    list.appendChild(item);
+                }
+            });
+        }
+
+        // 更新进度
+        function updateProgress() {
+            const landmarkCount = eggs.filter((e, i) => e.isLandmark && gameState.appearedEggs.has(i)).length;
+            progressBadge.textContent = landmarkCount;
+
+            eggs.forEach((egg, index) => {
+                if (egg.isLandmark) {
+                    const item = document.getElementById('progress-item-' + index);
+                    if (item && gameState.appearedEggs.has(index)) {
+                        item.classList.add('collected');
+                        item.querySelector('.progress-item-status').textContent = '已解锁';
+                        item.querySelector('i').className = 'fas fa-check-circle';
+                    }
+                }
+            });
+        }
+
+        function getBoatMoveArea() {
+            const boatCenterX = gameState.boatInitialX;
+            const boatCenterY = gameState.boatInitialY;
+            const headerHeight = getHeaderHeight();
+            const safeBottom = getSafeBottom();
+            const bottomMargin = cssClamp(50, window.innerHeight * 0.12, 80) + safeBottom;
+
+            return {
+                minX: Math.max(boatWidth / 2, boatCenterX - moveBounds.horizontal),
+                maxX: Math.min(window.innerWidth - boatWidth / 2, boatCenterX + moveBounds.horizontal),
+                minY: Math.max(headerHeight + boatHeight / 2 + cssClamp(15, window.innerWidth * 0.04, 20), boatCenterY - moveBounds.vertical),
+                maxY: Math.min(window.innerHeight - boatHeight / 2 - bottomMargin, boatCenterY + moveBounds.vertical * 0.5)
+            };
+        }
+
+        function constrainBoatPosition(x, y) {
+            const area = getBoatMoveArea();
+            return {
+                x: Math.max(area.minX, Math.min(area.maxX, x)),
+                y: Math.max(area.minY, Math.min(area.maxY, y))
+            };
+        }
+
+        function updateBoatRotation(deltaX) {
+            const maxAngle = 50;
+            const baseSensitivity = 0.25;
+            const maxVelocity = 40;
+
+            const velocityFactor = Math.min(Math.abs(deltaX) / maxVelocity, 1);
+            let targetAngle = deltaX * baseSensitivity * velocityFactor;
+            targetAngle = Math.max(-maxAngle, Math.min(maxAngle, targetAngle));
+
+            const smoothing = 0.2;
+            gameState.boatAngle += (targetAngle - gameState.boatAngle) * smoothing;
+
+            return gameState.boatAngle;
+        }
+
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let boatStartX = 0;
+        let boatStartY = 0;
+
+        function handleDragStart(e) {
+            if (!gameState.isGameStarted) return;
+
+            e.preventDefault();
+            gameState.isDragging = true;
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            dragStartX = clientX;
+            dragStartY = clientY;
+            gameState.lastTouchX = clientX;
+
+            const boatRect = dragonBoat.getBoundingClientRect();
+            boatStartX = boatRect.left + boatRect.width / 2;
+            boatStartY = boatRect.top + boatRect.height / 2;
+
+            // 隐藏操作提示
+            controlHint.classList.remove('show');
+        }
+
+        function handleDragMove(e) {
+            if (!gameState.isDragging || !gameState.isGameStarted) return;
+
+            e.preventDefault();
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            const deltaX = clientX - dragStartX;
+            const deltaY = clientY - dragStartY;
+
+            const newX = boatStartX + deltaX;
+            const newY = boatStartY + deltaY;
+
+            const constrainedPos = constrainBoatPosition(newX, newY);
+
+            const touchDeltaX = clientX - gameState.lastTouchX;
+            gameState.touchVelocityX = touchDeltaX;
+            gameState.lastTouchX = clientX;
+
+            const angle = updateBoatRotation(touchDeltaX);
+
+            dragonBoat.style.left = constrainedPos.x + 'px';
+            dragonBoat.style.top = constrainedPos.y + 'px';
+            dragonBoat.style.bottom = 'auto';
+            dragonBoat.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
+            checkCollisions(constrainedPos.x, constrainedPos.y);
+        }
+
+        function handleDragEnd() {
+            gameState.isDragging = false;
+            // 慢慢回正
+            const resetAngle = setInterval(() => {
+                if (!gameState.isDragging && Math.abs(gameState.boatAngle) > 0.5) {
+                    gameState.boatAngle *= 0.9;
+                    dragonBoat.style.transform = `translate(-50%, -50%) rotate(${gameState.boatAngle}deg)`;
+                } else {
+                    gameState.boatAngle = 0;
+                    dragonBoat.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+                    clearInterval(resetAngle);
+                }
+            }, 16);
+        }
+
+        function checkCollisions(boatX, boatY) {
+            const collisionDistance = boatWidth * 0.45;
+
+            gameState.activeEggs.forEach((eggData, index) => {
+                if (eggData.collected) return;
+
+                const distance = Math.sqrt(
+                    Math.pow(boatX - eggData.x, 2) + Math.pow(boatY - eggData.y, 2)
+                );
+
+                if (distance < collisionDistance) {
+                    collectEgg(index);
+                }
+            });
+        }
+
+        function collectEgg(index) {
+            const eggData = gameState.activeEggs[index];
+            if (eggData.collected) return;
+
+            eggData.collected = true;
+            gameState.collectedEggs++;
+
+            // 收集特效
+            showCollectEffect(eggData.x, eggData.y);
+
+            // 显示文字
+            showEggText(eggData);
+
+            // 更新进度
+            updateProgress();
+
+            // 彩蛋收集动画
+            eggData.element.classList.add('collected');
+
+            setTimeout(() => {
+                hideEgg(eggData);
+            }, 800);
+        }
+
+        function showCollectEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'collect-effect';
+            effect.style.left = x + 'px';
+            effect.style.top = y + 'px';
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        function showEggText(eggData) {
+            const textElement = document.createElement('img');
+            textElement.className = 'egg-text';
+            textElement.src = eggData.textImage;
+            textElement.alt = '彩蛋文字';
+
+            const eggWidth = getEggSize();
+            const offsetY = cssClamp(20, window.innerWidth * 0.06, 30);
+
+            textElement.style.left = eggData.x + 'px';
+            textElement.style.top = (eggData.y + eggWidth / 2 + offsetY) + 'px';
+
+            eggTextContainer.appendChild(textElement);
+
+            const adjustPositionAndShow = function() {
+                const textRect = textElement.getBoundingClientRect();
+
+                let adjustedLeft = eggData.x;
+                let adjustedTop = textElement.offsetTop;
+
+                const padding = cssClamp(12, window.innerWidth * 0.04, 16);
+                const bottomPadding = cssClamp(60, window.innerWidth * 0.15, 80) + getSafeBottom();
+                const headerHeight = getHeaderHeight() + cssClamp(8, window.innerWidth * 0.02, 10);
+
+                if (adjustedLeft - textRect.width / 2 < padding) {
+                    adjustedLeft = padding + textRect.width / 2;
+                } else if (adjustedLeft + textRect.width / 2 > window.innerWidth - padding) {
+                    adjustedLeft = window.innerWidth - padding - textRect.width / 2;
+                }
+
+                const minTop = headerHeight + padding;
+                const maxTop = window.innerHeight - bottomPadding - textRect.height;
+
+                adjustedTop = Math.max(minTop, Math.min(maxTop, adjustedTop));
+
+                textElement.style.left = adjustedLeft + 'px';
+                textElement.style.top = adjustedTop + 'px';
+
+                requestAnimationFrame(() => {
+                    textElement.classList.add('show');
+                });
+            };
+
+            if (textElement.complete) {
+                adjustPositionAndShow();
+            } else {
+                textElement.onload = adjustPositionAndShow;
+            }
+
+            eggData.textElement = textElement;
+        }
+
+        function hideEgg(eggData) {
+            if (eggData.textElement) {
+                eggData.textElement.classList.remove('show');
+                eggData.textElement.classList.add('hide');
+            }
+
+            setTimeout(() => {
+                if (eggData.element && eggData.element.parentNode) {
+                    eggContainer.removeChild(eggData.element);
+                }
+                if (eggData.textElement && eggData.textElement.parentNode) {
+                    eggTextContainer.removeChild(eggData.textElement);
+                }
+
+                const index = gameState.activeEggs.indexOf(eggData);
+                if (index > -1) {
+                    gameState.activeEggs.splice(index, 1);
+                }
+
+                checkGameEnd();
+            }, 500);
+        }
+
+        function checkEggBoatOverlap(x, y, eggWidth, eggHeight) {
+            const boatRect = dragonBoat.getBoundingClientRect();
+            const boatCenterX = boatRect.left + boatRect.width / 2;
+            const boatCenterY = boatRect.top + boatRect.height / 2;
+            const extraPadding = cssClamp(20, window.innerWidth * 0.06, 30);
+            const boatHalfWidth = boatRect.width / 2 + eggWidth / 2 + extraPadding;
+            const boatHalfHeight = boatRect.height / 2 + eggHeight / 2 + extraPadding;
+
+            const dx = Math.abs(x - boatCenterX);
+            const dy = Math.abs(y - boatCenterY);
+
+            return dx < boatHalfWidth && dy < boatHalfHeight;
+        }
+
+        function checkEggDistance(x, y) {
+            const eggSize = getEggSize();
+            const minVerticalDistance = cssClamp(60, eggSize * 1.4, 80);
+            const minHorizontalDistance = cssClamp(50, eggSize * 1.2, 70);
+
+            for (const eggData of gameState.activeEggs) {
+                if (eggData.collected) continue;
+
+                const verticalDistance = Math.abs(y - eggData.y);
+                const horizontalDistance = Math.abs(x - eggData.x);
+
+                if (verticalDistance < minVerticalDistance || horizontalDistance < minHorizontalDistance) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function getRandomEggIndex() {
+            const landmarkIndices = [0, 1, 2, 3, 4, 5];
+            const repeatableIndices = [6, 7, 8, 9];
+
+            const allLandmarksAppeared = landmarkIndices.every(i => gameState.appearedEggs.has(i));
+
+            if (allLandmarksAppeared) {
+                return repeatableIndices[Math.floor(Math.random() * repeatableIndices.length)];
+            }
+
+            const unappearedLandmarks = landmarkIndices.filter(i => !gameState.appearedEggs.has(i));
+
+            if (Math.random() < 0.8 && unappearedLandmarks.length > 0) {
+                return unappearedLandmarks[Math.floor(Math.random() * unappearedLandmarks.length)];
+            } else {
+                const allIndices = [...unappearedLandmarks, ...repeatableIndices];
+                return allIndices[Math.floor(Math.random() * allIndices.length)];
+            }
+        }
+
+        function spawnEgg() {
+            const allLandmarksAppeared = [0, 1, 2, 3, 4, 5].every(i => gameState.appearedEggs.has(i));
+            if (allLandmarksAppeared && gameState.activeEggs.length === 0) {
+                return;
+            }
+
+            const eggIndex = getRandomEggIndex();
+            const egg = eggs[eggIndex];
+            const eggSize = getEggSize();
+
+            const area = getBoatMoveArea();
+            const boatCenterX = gameState.boatInitialX;
+            const boatCenterY = gameState.boatInitialY;
+
+            let randomX, randomY;
+            let attempts = 0;
+            const maxAttempts = 200;
+            let validPosition = false;
+
+            // 彩蛋生成的安全范围（比龙舟可移动范围略小，确保能碰撞到）
+            const safePadding = eggSize * 0.15;
+            const safeMinX = area.minX + safePadding;
+            const safeMaxX = area.maxX - safePadding;
+            const safeMinY = area.minY + safePadding;
+            const safeMaxY = area.maxY - safePadding;
+
+            while (attempts < maxAttempts) {
+                // X方向：从左右两侧随机选择
+                const leftRange = safeMaxX < boatCenterX ? 0 : (boatCenterX - eggSize - safeMinX);
+                const rightRange = safeMinX > boatCenterX ? 0 : (safeMaxX - boatCenterX - eggSize);
+                
+                if (Math.random() < 0.5 && leftRange > 10) {
+                    randomX = safeMinX + eggSize / 2 + Math.random() * (leftRange - eggSize / 2);
+                } else if (rightRange > 10) {
+                    randomX = boatCenterX + eggSize / 2 + Math.random() * (rightRange - eggSize / 2);
+                } else {
+                    randomX = safeMinX + eggSize / 2 + Math.random() * (safeMaxX - safeMinX - eggSize);
+                }
+
+                // Y方向：从上下区域随机选择，避开龙舟初始位置
+                const topRange = Math.min(boatCenterY - eggSize * 1.5, safeMaxY) - safeMinY;
+                const bottomRange = safeMaxY - Math.max(boatCenterY + eggSize * 1.5, safeMinY);
+
+                if (Math.random() < 0.6 && topRange > 20) {
+                    randomY = safeMinY + eggSize / 2 + Math.random() * topRange;
+                } else if (bottomRange > 20) {
+                    randomY = Math.max(boatCenterY + eggSize * 1.5, safeMinY) + Math.random() * bottomRange;
+                } else {
+                    randomY = safeMinY + eggSize / 2 + Math.random() * (safeMaxY - safeMinY - eggSize);
+                }
+
+                if (!checkEggBoatOverlap(randomX, randomY, eggSize, eggSize * 0.8)) {
+                    if (checkEggDistance(randomX, randomY)) {
+                        validPosition = true;
+                        break;
+                    }
+                }
+
+                attempts++;
+            }
+
+            if (!validPosition) return;
+
+            const eggElement = document.createElement('img');
+            eggElement.src = egg.image;
+            eggElement.className = 'egg';
+            eggElement.alt = egg.name;
+            eggElement.style.left = randomX + 'px';
+            eggElement.style.top = randomY + 'px';
+
+            eggContainer.appendChild(eggElement);
+
+            setTimeout(() => {
+                eggElement.classList.add('show');
+            }, 50);
+
+            const eggData = {
+                element: eggElement,
+                x: randomX,
+                y: randomY,
+                textImage: egg.textImage,
+                collected: false,
+                textElement: null,
+                eggIndex: eggIndex
+            };
+
+            gameState.activeEggs.push(eggData);
+            gameState.appearedEggs.add(eggIndex);
+            gameState.currentEggIndex++;
+        }
+
+        function scheduleNextEggBatch() {
+            // 已由自动生成定时器处理，这里保留备用
+        }
+
+        // 自动生成彩蛋定时器
+        let autoSpawnInterval = null;
+        const MAX_ACTIVE_EGGS = 4;
+
+        function startAutoSpawn() {
+            if (autoSpawnInterval) clearInterval(autoSpawnInterval);
+            
+            autoSpawnInterval = setInterval(() => {
+                if (!gameState.isGameStarted) {
+                    clearInterval(autoSpawnInterval);
+                    autoSpawnInterval = null;
+                    return;
+                }
+
+                const allLandmarksAppeared = [0, 1, 2, 3, 4, 5].every(i => gameState.appearedEggs.has(i));
+                if (allLandmarksAppeared && gameState.activeEggs.length === 0) {
+                    endGame();
+                    clearInterval(autoSpawnInterval);
+                    autoSpawnInterval = null;
+                    return;
+                }
+
+                // 场上彩蛋数量小于最大值时才生成新的
+                const uncollectedEggs = gameState.activeEggs.filter(e => !e.collected).length;
+                if (uncollectedEggs < MAX_ACTIVE_EGGS && !allLandmarksAppeared) {
+                    spawnEgg();
+                }
+            }, 2000); // 每2秒检查一次
+        }
+
+        function stopAutoSpawn() {
+            if (autoSpawnInterval) {
+                clearInterval(autoSpawnInterval);
+                autoSpawnInterval = null;
+            }
+        }
+
+        function spawnEggBatch() {
+            const allLandmarksAppeared = [0, 1, 2, 3, 4, 5].every(i => gameState.appearedEggs.has(i));
+            if (allLandmarksAppeared && gameState.activeEggs.length === 0) {
+                return;
+            }
+
+            const batchCount = Math.floor(Math.random() * 2) + 1;
+
+            gameState.batchSpawned = 0;
+
+            for (let i = 0; i < batchCount; i++) {
+                spawnEgg();
+                gameState.batchSpawned++;
+            }
+        }
+
+        function checkGameEnd() {
+            const allLandmarksAppeared = [0, 1, 2, 3, 4, 5].every(i => gameState.appearedEggs.has(i));
+            if (allLandmarksAppeared && gameState.activeEggs.length === 0) {
+                endGame();
+            }
+        }
+
+        function startGame() {
+            if (gameState.isGameStarted) return;
+
+            gameState.isGameStarted = true;
+
+            guideText.style.animation = 'fadeOut 1.5s forwards';
+
+            // 确保初始位置已记录
+            initBoatPosition();
+
+            setTimeout(() => {
+                guideText.style.display = 'none';
+                bgImage.style.opacity = '0';
+                bgVideo.style.opacity = '1';
+                bgVideo.play().catch(() => {});
+                spawnEggBatch();
+                // 启动自动生成彩蛋的定时器
+                startAutoSpawn();
+
+                // 显示操作提示
+                controlHint.classList.add('show');
+                setTimeout(() => controlHint.classList.remove('show'), 3000);
+            }, 1500);
+        }
+
+        function endGame() {
+            gameState.isGameStarted = false;
+            gameState.isDragging = false;
+            stopAutoSpawn();
+            document.getElementById('successCount').textContent = '6';
+            successBackground.classList.add('show');
+        }
+
+        function restartGame() {
+            // 停止自动生成
+            stopAutoSpawn();
+
+            // 重置状态
+            gameState.isGameStarted = false;
+            gameState.isDragging = false;
+            gameState.currentEggIndex = 0;
+            gameState.activeEggs = [];
+            gameState.appearedEggs = new Set();
+            gameState.collectedEggs = 0;
+            gameState.boatAngle = 0;
+            gameState.batchSpawned = 0;
+
+            // 清空容器
+            eggContainer.innerHTML = '';
+            eggTextContainer.innerHTML = '';
+
+            // 隐藏通关界面
+            successBackground.classList.remove('show');
+
+            // 重置龙舟位置
+            dragonBoat.style.left = '50%';
+            dragonBoat.style.top = '80%';
+            dragonBoat.style.bottom = 'auto';
+            dragonBoat.style.transform = 'translate(-50%, -50%)';
+            dragonBoat.style.removeProperty('rotate');
+
+            // 重新初始化位置
+            initBoatPosition();
+
+            // 重置背景
+            bgImage.style.opacity = '1';
+            bgVideo.style.opacity = '0';
+
+            // 显示引导
+            guideText.style.display = 'block';
+            guideText.style.animation = 'fadeIn 1.5s forwards';
+
+            // 更新进度
+            progressBadge.textContent = '0';
+            initProgressList();
+        }
+
+        // 进度面板
+        function toggleProgressPanel() {
+            const panel = document.getElementById('progressPanel');
+            const overlay = document.getElementById('panelOverlay');
+            panel.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // 触摸事件
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.game-header') || e.target.closest('.progress-panel') || e.target.closest('.overlay')) return;
+            if (!gameState.isGameStarted) {
+                startGame();
+            } else {
+                handleDragStart(e);
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            handleDragMove(e);
+        }, { passive: false });
+
+        document.addEventListener('touchend', (e) => {
+            handleDragEnd();
+        });
+
+        // 鼠标事件（桌面调试用）
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.game-header') || e.target.closest('.progress-panel') || e.target.closest('.overlay')) return;
+            if (!gameState.isGameStarted) {
+                startGame();
+            } else {
+                handleDragStart(e);
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            handleDragMove(e);
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            handleDragEnd();
+        });
+
+        // 阻止双击缩放
+        document.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+        });
+
+        // 窗口大小改变时重新计算
+        window.addEventListener('resize', () => {
+            // 更新龙舟和彩蛋尺寸
+            boatWidth = getBoatSize();
+            boatHeight = boatWidth * 0.4;
+            moveBounds.vertical = Math.min(350, window.innerHeight * 0.38);
+            moveBounds.horizontal = cssClamp(100, window.innerWidth * 0.42, 350);
+            if (!gameState.isDragging) {
+                initBoatPosition();
+            }
+        });
+
+        // 初始化
+        initProgressList();
+        // 等待DOM和图片加载完成后初始化龙舟位置
+        window.addEventListener('load', initBoatPosition);
+        // 兜底：DOM就绪后也尝试初始化
+        if (document.readyState === 'complete') {
+            initBoatPosition();
+        } else {
+            document.addEventListener('DOMContentLoaded', initBoatPosition);
+        }
+    </script>
+</body>
+</html>

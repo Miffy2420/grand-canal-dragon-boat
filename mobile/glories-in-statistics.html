@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>数说辉煌 - 2026大运河龙舟赛</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --green-bg: #eaf8f0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 4px 12px rgba(15, 59, 42, 0.08);
+            --shadow-md: 0 8px 24px rgba(15, 59, 42, 0.12);
+            --shadow-lg: 0 16px 40px rgba(15, 59, 42, 0.18);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            /* 响应式字体尺寸变量 */
+            --fs-title: clamp(0.9rem, 3.8vw, 1rem);
+            --fs-card-title: clamp(0.95rem, 4vw, 1.05rem);
+            --fs-body: clamp(0.85rem, 3.5vw, 0.9rem);
+            --fs-small: clamp(0.72rem, 3vw, 0.78rem);
+            --fs-number: clamp(1.3rem, 5.5vw, 1.6rem);
+            --fs-banner: clamp(1.3rem, 5.5vw, 1.5rem);
+            /* 响应式间距变量 */
+            --space-xs: clamp(4px, 1vw, 6px);
+            --space-sm: clamp(8px, 2.5vw, 12px);
+            --space-md: clamp(12px, 3.5vw, 16px);
+            --space-lg: clamp(16px, 5vw, 20px);
+            --space-xl: clamp(20px, 6vw, 24px);
+            /* 图表高度 */
+            --chart-height: clamp(140px, 45vw, 180px);
+            --chart-inner-height: clamp(100px, 32vw, 140px);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--green-bg);
+            color: var(--green-dark);
+            line-height: 1.7;
+            padding-bottom: clamp(60px, 18vw, 75px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 顶部标题栏 */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            height: clamp(44px, 13vw, 50px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(30, 107, 74, 0.1);
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .app-header h1 {
+            font-size: var(--fs-title);
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+
+        .app-header .back-btn {
+            position: absolute;
+            left: clamp(8px, 2.5vw, 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            width: clamp(32px, 9vw, 38px);
+            height: clamp(32px, 9vw, 38px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green-dark);
+            font-size: clamp(1rem, 4.2vw, 1.15rem);
+            border-radius: 50%;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .app-header .back-btn:active {
+            background: var(--green-pale);
+        }
+
+        /* 顶部数据横幅 */
+        .data-banner {
+            background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-bright) 100%);
+            padding: var(--space-xl) var(--space-md) clamp(24px, 8vw, 32px);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-banner::before {
+            content: '';
+            position: absolute;
+            top: clamp(-40px, -12vw, -50px);
+            right: clamp(-40px, -12vw, -50px);
+            width: clamp(120px, 38vw, 150px);
+            height: clamp(120px, 38vw, 150px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+
+        .data-banner::after {
+            content: '';
+            position: absolute;
+            bottom: clamp(-24px, -7vw, -30px);
+            left: clamp(-24px, -7vw, -30px);
+            width: clamp(80px, 25vw, 100px);
+            height: clamp(80px, 25vw, 100px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .data-banner-title {
+            font-size: var(--fs-body);
+            opacity: 0.9;
+            margin-bottom: var(--space-xs);
+            position: relative;
+            z-index: 1;
+        }
+
+        .data-banner-main {
+            font-size: var(--fs-banner);
+            font-weight: 800;
+            margin-bottom: var(--space-xs);
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .data-banner-sub {
+            font-size: var(--fs-small);
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .data-banner-icon {
+            position: absolute;
+            right: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: clamp(2.5rem, 10vw, 3.2rem);
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        /* 核心数据卡片 */
+        .core-stats {
+            margin: clamp(-16px, -5vw, -20px) var(--space-md) 0;
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(6px, 2vw, 10px);
+        }
+
+        .core-stat-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: clamp(10px, 3.5vw, 14px) clamp(6px, 2vw, 10px);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s;
+        }
+
+        .core-stat-card:active {
+            transform: scale(0.96);
+        }
+
+        .core-stat-number {
+            font-size: var(--fs-number);
+            font-weight: 800;
+            color: var(--green-mid);
+            line-height: 1.2;
+            margin-bottom: var(--space-xs);
+        }
+
+        .core-stat-card:nth-child(2) .core-stat-number { color: var(--gold); }
+        .core-stat-card:nth-child(3) .core-stat-number { color: #e57373; }
+
+        .core-stat-label {
+            font-size: clamp(0.68rem, 2.8vw, 0.75rem);
+            color: #888;
+            line-height: 1.3;
+        }
+
+        /* 内容区 */
+        .content {
+            padding: var(--space-lg) var(--space-md) 0;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: var(--fs-card-title);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .section-title i {
+            color: var(--green-bright);
+            font-size: var(--fs-title);
+        }
+
+        .section-text {
+            font-size: var(--fs-body);
+            color: #555;
+            line-height: 1.8;
+            text-align: justify;
+            text-indent: 2em;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 数据网格 */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+            margin: var(--space-md) 0;
+        }
+
+        .data-item {
+            background: linear-gradient(135deg, var(--green-pale) 0%, #fff 100%);
+            border-radius: var(--radius-sm);
+            padding: clamp(12px, 3.5vw, 16px) clamp(8px, 2.5vw, 12px);
+            text-align: center;
+            border-left: 3px solid var(--green-bright);
+        }
+
+        .data-item-num {
+            font-size: var(--fs-number);
+            font-weight: 800;
+            color: var(--green-mid);
+            line-height: 1.2;
+            margin-bottom: var(--space-xs);
+        }
+
+        .data-item-label {
+            font-size: var(--fs-small);
+            color: #666;
+        }
+
+        /* 柱状图 */
+        .chart-container {
+            background: var(--green-bg);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md) var(--space-sm);
+            margin: var(--space-md) 0;
+        }
+
+        .chart-title {
+            font-size: var(--fs-body);
+            font-weight: 700;
+            color: var(--green-mid);
+            text-align: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .bar-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: var(--chart-height);
+            padding: 0 var(--space-sm);
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+            flex: 1;
+        }
+
+        .bar-wrapper {
+            height: var(--chart-inner-height);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .bar {
+            width: clamp(28px, 9vw, 38px);
+            background: linear-gradient(180deg, var(--green-bright) 0%, var(--green-light) 100%);
+            border-radius: 6px 6px 0 0;
+            position: relative;
+            transition: height 1s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 4px 12px rgba(58, 155, 110, 0.3);
+        }
+
+        .bar-group:nth-child(2) .bar {
+            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-light) 100%);
+            box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: clamp(-18px, -5.5vw, -22px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.78rem, 3.2vw, 0.85rem);
+            font-weight: 700;
+            color: var(--green-mid);
+            white-space: nowrap;
+        }
+
+        .bar-label {
+            font-size: var(--fs-small);
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* 折线图 */
+        .line-chart-container {
+            background: var(--green-bg);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md) var(--space-sm);
+            margin: var(--space-md) 0;
+            position: relative;
+        }
+
+        .line-chart {
+            width: 100%;
+            height: var(--chart-height);
+            position: relative;
+        }
+
+        .chart-grid {
+            position: absolute;
+            width: calc(100% - clamp(35px, 10vw, 42px));
+            height: var(--chart-inner-height);
+            left: clamp(30px, 8.5vw, 36px);
+            top: var(--space-xs);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .grid-line {
+            width: 100%;
+            border-top: 1px dashed rgba(123, 198, 160, 0.3);
+        }
+
+        .y-axis {
+            position: absolute;
+            left: 0;
+            top: var(--space-xs);
+            height: var(--chart-inner-height);
+            width: clamp(28px, 8vw, 32px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: clamp(0.62rem, 2.6vw, 0.7rem);
+            color: #999;
+            text-align: right;
+            padding-right: var(--space-xs);
+        }
+
+        .x-axis {
+            position: absolute;
+            bottom: 0;
+            left: clamp(30px, 8.5vw, 36px);
+            width: calc(100% - clamp(35px, 10vw, 42px));
+            display: flex;
+            justify-content: space-around;
+            font-size: clamp(0.68rem, 2.8vw, 0.75rem);
+            color: #666;
+        }
+
+        .chart-svg {
+            position: absolute;
+            top: var(--space-xs);
+            left: clamp(30px, 8.5vw, 36px);
+            width: calc(100% - clamp(35px, 10vw, 42px));
+            height: var(--chart-inner-height);
+        }
+
+        .line-path {
+            fill: none;
+            stroke: url(#lineGradient);
+            stroke-width: clamp(2px, 0.8vw, 3px);
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease forwards 0.5s;
+        }
+
+        .line-area {
+            fill: url(#areaGradient);
+            opacity: 0;
+            animation: fadeInArea 1s ease forwards 1.5s;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes fadeInArea {
+            to { opacity: 1; }
+        }
+
+        .data-point {
+            fill: #fff;
+            stroke: var(--green-bright);
+            stroke-width: clamp(2px, 0.8vw, 3px);
+            opacity: 0;
+            animation: popIn 0.4s ease forwards;
+        }
+
+        .data-point:nth-child(1) { animation-delay: 0.8s; }
+        .data-point:nth-child(2) { animation-delay: 1.2s; }
+        .data-point:nth-child(3) { animation-delay: 1.6s; }
+
+        @keyframes popIn {
+            from { opacity: 0; r: 0; }
+            to { opacity: 1; r: clamp(4px, 1.2vw, 5px); }
+        }
+
+        .data-label {
+            fill: var(--green-mid);
+            font-size: clamp(9px, 2.5vw, 11px);
+            font-weight: 700;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .data-label:nth-child(4) { animation-delay: 1s; }
+        .data-label:nth-child(5) { animation-delay: 1.4s; }
+        .data-label:nth-child(6) { animation-delay: 1.8s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* 文创画廊 */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            aspect-ratio: 1;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+            display: block;
+        }
+
+        .gallery-item:active img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: clamp(16px, 5vw, 22px) var(--space-sm) var(--space-xs);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: #fff;
+            font-size: var(--fs-small);
+            text-align: center;
+        }
+
+        /* 高亮总结 */
+        .highlight-summary {
+            background: linear-gradient(135deg, var(--green-bright) 0%, var(--green-mid) 100%);
+            color: #fff;
+            padding: var(--space-lg) var(--space-md);
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin: var(--space-md) var(--space-md) 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .highlight-summary h3 {
+            font-size: var(--fs-card-title);
+            margin-bottom: var(--space-sm);
+            color: var(--gold-light);
+        }
+
+        .highlight-summary p {
+            font-size: var(--fs-body);
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        /* 图片模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-md);
+            width: clamp(36px, 10vw, 42px);
+            height: clamp(36px, 10vw, 42px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: clamp(52px, 15vw, 62px);
+            padding-bottom: env(safe-area-inset-bottom);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border-top: 1px solid rgba(30, 107, 74, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(15, 59, 42, 0.06);
+        }
+
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #999;
+            font-size: clamp(0.62rem, 2.6vw, 0.7rem);
+            gap: clamp(2px, 0.8vw, 4px);
+            transition: color 0.2s;
+            height: 100%;
+        }
+
+        .bottom-nav-item i { font-size: clamp(1rem, 4.2vw, 1.2rem); }
+
+        .bottom-nav-item.active {
+            color: var(--green-bright);
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: clamp(68px, 20vw, 82px);
+            right: var(--space-md);
+            width: clamp(36px, 11vw, 44px);
+            height: clamp(36px, 11vw, 44px);
+            border-radius: 50%;
+            background: var(--green-bright);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--green-light); border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题栏 -->
+    <header class="app-header">
+        <button class="back-btn" onclick="history.back()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <h1>数说辉煌</h1>
+    </header>
+
+    <!-- 顶部数据横幅 -->
+    <div class="data-banner">
+        <div class="data-banner-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="data-banner-title">2026大运河龙舟赛</div>
+        <div class="data-banner-main">一组数据读懂影响力</div>
+        <div class="data-banner-sub">从12支到45支，从一城到八省</div>
+    </div>
+
+    <!-- 核心数据 -->
+    <div class="core-stats">
+        <div class="core-stat-card">
+            <div class="core-stat-number">45</div>
+            <div class="core-stat-label">参赛队伍</div>
+        </div>
+        <div class="core-stat-card">
+            <div class="core-stat-number">600+</div>
+            <div class="core-stat-label">参赛人数</div>
+        </div>
+        <div class="core-stat-card">
+            <div class="core-stat-number">8</div>
+            <div class="core-stat-label">沿线省市</div>
+        </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="content">
+        <!-- 赛事核心数据 -->
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i>赛事核心数据</h2>
+            <div class="data-grid">
+                <div class="data-item">
+                    <div class="data-item-num">16</div>
+                    <div class="data-item-label">公开组队伍</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-item-num">29</div>
+                    <div class="data-item-label">大众组队伍</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-item-num">3</div>
+                    <div class="data-item-label">竞赛项目</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-item-num">2天</div>
+                    <div class="data-item-label">赛事周期</div>
+                </div>
+            </div>
+            <p class="section-text">2026年"行走大运河"中国辉煌足迹大运河龙舟系列活动主会场（北京·昌平站）共集结国内外45支参赛队伍，其中公开组16支、大众组29支，参赛总人数超过600人。赛事设置12人龙舟100米直道竞速、200米直道竞速及四圈绕标赛三项竞赛项目。</p>
+        </div>
+
+        <!-- 参赛组别分布 -->
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-users"></i>参赛组别分布</h2>
+            <div class="chart-container">
+                <div class="chart-title">参赛队伍数量对比</div>
+                <div class="bar-chart">
+                    <div class="bar-group">
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height: 0%;" data-height="65%">
+                                <span class="bar-value">16</span>
+                            </div>
+                        </div>
+                        <div class="bar-label">公开组</div>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height: 0%;" data-height="100%">
+                                <span class="bar-value">29</span>
+                            </div>
+                        </div>
+                        <div class="bar-label">大众组</div>
+                    </div>
+                </div>
+            </div>
+            <p class="section-text">赛事以龙舟为纽带，以运河为脉络，邀约沿线八省市队伍参赛，推动区域文体交流与资源共享。在公开组，专业队伍同台飙速，展现了高超的竞技水平；而大众组则洋溢着全民健身的热情，高校学子、企业职工、社会团体等队伍齐心协力，安心搏桨，在协作中诠释体育精神。</p>
+        </div>
+
+        <!-- 增长趋势 -->
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-chart-line"></i>参赛队伍增长趋势</h2>
+            <div class="line-chart-container">
+                <div class="chart-title">2024 - 2026 参赛队伍增长</div>
+                <div class="line-chart">
+                    <div class="y-axis">
+                        <span>50</span>
+                        <span>40</span>
+                        <span>30</span>
+                        <span>20</span>
+                        <span>10</span>
+                        <span>0</span>
+                    </div>
+                    <div class="chart-grid">
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                    </div>
+                    <div class="x-axis">
+                        <span>2024</span>
+                        <span>2025</span>
+                        <span>2026</span>
+                    </div>
+                    <svg class="chart-svg" viewBox="0 0 280 140" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#3a9b6e" />
+                                <stop offset="100%" style="stop-color:#1e6b4a" />
+                            </linearGradient>
+                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:rgba(58, 155, 110, 0.3)" />
+                                <stop offset="100%" style="stop-color:rgba(58, 155, 110, 0.05)" />
+                            </linearGradient>
+                        </defs>
+                        <path class="line-area" d="M 20 112 Q 80 85 140 56 T 260 14 L 260 140 L 20 140 Z" />
+                        <path class="line-path" d="M 20 112 Q 80 85 140 56 T 260 14" />
+                        <circle class="data-point" cx="20" cy="112" r="5" />
+                        <circle class="data-point" cx="140" cy="56" r="5" />
+                        <circle class="data-point" cx="260" cy="14" r="5" />
+                        <text class="data-label" x="12" y="102">12</text>
+                        <text class="data-label" x="132" y="46">30</text>
+                        <text class="data-label" x="252" y="4">45</text>
+                    </svg>
+                </div>
+            </div>
+            <p class="section-text">自2024年首航至今，中国辉煌足迹大运河龙舟系列活动已在大运河沿线北京、天津、河北、山东、安徽、河南、江苏、浙江8省18城织就一张覆盖广泛、影响深远的文体网络。</p>
+            <p class="section-text">从2024年的12支队伍到2026年的45支队伍，参赛规模增长近三倍；从单一江苏省内队伍到覆盖大运河沿线八省市乃至海外代表队，赛事版图持续扩展。</p>
+        </div>
+    </div>
+
+    <!-- 影响力数据 -->
+    <div class="section" style="margin: 0 var(--space-md) var(--space-md);">
+        <h2 class="section-title"><i class="fas fa-trophy"></i>影响力数据</h2>
+        <div class="data-grid">
+            <div class="data-item">
+                <div class="data-item-num">800万+</div>
+                <div class="data-item-label">现场参与人次</div>
+            </div>
+            <div class="data-item">
+                <div class="data-item-num">15亿+</div>
+                <div class="data-item-label">全媒体传播覆盖</div>
+            </div>
+            <div class="data-item">
+                <div class="data-item-num">2亿+</div>
+                <div class="data-item-label">央视网专题触达</div>
+            </div>
+            <div class="data-item">
+                <div class="data-item-num">1.1亿</div>
+                <div class="data-item-label">带动文体旅消费</div>
+            </div>
+            <div class="data-item">
+                <div class="data-item-num">24场</div>
+                <div class="data-item-label">精品赛事</div>
+            </div>
+            <div class="data-item">
+                <div class="data-item-num">18城</div>
+                <div class="data-item-label">覆盖城市</div>
+            </div>
+        </div>
+        <p class="section-text">累计举办24场精品赛事及配套文旅活动，超800万群众现场参与体验，线上线下全媒体传播覆盖超15亿人次，央视网专题页触达超2亿用户，直接带动文体旅消费超1.1亿元，成为体育促消费、文化促融合的典范实践。</p>
+    </div>
+
+    <!-- 文创产品 -->
+    <div class="section" style="margin: 0 var(--space-md) var(--space-md);">
+        <h2 class="section-title"><i class="fas fa-gift"></i>文创周边</h2>
+        <p class="section-text">以赛引流，以展促销。本次龙舟赛事着重带动本地文创、特产、餐饮等领域消费，联动户外休闲、市集消费、文化交流等多重场景，助力昌平文体商旅融合提质升级。</p>
+        <div class="gallery">
+            <div class="gallery-item" onclick="openModal('../glories-in-statistics-page/文创1.jpg')">
+                <img src="../glories-in-statistics-page/文创1.jpg" alt="文创产品1">
+                <div class="gallery-caption">文创产品1</div>
+            </div>
+            <div class="gallery-item" onclick="openModal('../glories-in-statistics-page/文创2.jpg')">
+                <img src="../glories-in-statistics-page/文创2.jpg" alt="文创产品2">
+                <div class="gallery-caption">文创产品2</div>
+            </div>
+            <div class="gallery-item" onclick="openModal('../glories-in-statistics-page/文创3.jpg')">
+                <img src="../glories-in-statistics-page/文创3.jpg" alt="文创产品3">
+                <div class="gallery-caption">文创产品3</div>
+            </div>
+            <div class="gallery-item" onclick="openModal('../glories-in-statistics-page/文创4（三龙文化）.jpg')">
+                <img src="../glories-in-statistics-page/文创4（三龙文化）.jpg" alt="三龙文化">
+                <div class="gallery-caption">三龙文化</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 总结 -->
+    <div class="highlight-summary">
+        <h3><i class="fas fa-quote-left"></i> 千年漕运到全民健身</h3>
+        <p>从通惠河畔到十三陵水库，千年运河文脉在当代得到了活态传承，大运河龙舟赛以真实数据书写文体旅融合的时代答卷。</p>
+    </div>
+
+    <div style="height: var(--space-md);"></div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="competition-overview.html" class="bottom-nav-item">
+            <i class="fas fa-flag"></i>
+            <span>赛事</span>
+        </a>
+        <a href="game-experience.html" class="bottom-nav-item">
+            <i class="fas fa-gamepad"></i>
+            <span>游戏</span>
+        </a>
+        <a href="canal-scenery.html" class="bottom-nav-item">
+            <i class="fas fa-image"></i>
+            <span>风光</span>
+        </a>
+        <a href="glories-in-statistics.html" class="bottom-nav-item active">
+            <i class="fas fa-chart-bar"></i>
+            <span>数据</span>
+        </a>
+    </nav>
+
+    <!-- 返回顶部 -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 图片模态框 -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <img id="modalImg" src="" alt="预览">
+    </div>
+
+    <script>
+        // 图片模态框
+        function openModal(src) {
+            document.getElementById('modalImg').src = src;
+            document.getElementById('imageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // 返回顶部
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            backToTop.classList.toggle('show', window.scrollY > 300);
+        });
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 柱状图动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bar');
+                    bars.forEach(bar => {
+                        const height = bar.dataset.height;
+                        setTimeout(() => {
+                            bar.style.height = height;
+                        }, 200);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.bar-chart').forEach(chart => {
+            observer.observe(chart);
+        });
+
+        // 图片淡入效果
+        document.querySelectorAll('img').forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.4s ease';
+            img.onload = function() { this.style.opacity = '1'; };
+            if (img.complete) img.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>赛事概览 - 2026大运河龙舟活动</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --green-bg: #eaf8f0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --shadow-sm: 0 4px 12px rgba(15, 59, 42, 0.08);
+            --shadow-md: 0 8px 24px rgba(15, 59, 42, 0.12);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            /* 响应式字体尺寸 */
+            --fs-page-title: clamp(0.9rem, 3.8vw, 1rem);
+            --fs-card-title: clamp(0.95rem, 4vw, 1.05rem);
+            --fs-body: clamp(0.85rem, 3.5vw, 0.9rem);
+            --fs-small: clamp(0.72rem, 3vw, 0.78rem);
+            --fs-data-num: clamp(1.3rem, 5.5vw, 1.6rem);
+            --fs-banner-title: clamp(1.15rem, 5vw, 1.4rem);
+            --fs-banner-sub: clamp(0.72rem, 3vw, 0.82rem);
+            --fs-tab: clamp(0.8rem, 3.3vw, 0.9rem);
+            --fs-highlight: clamp(0.82rem, 3.4vw, 0.9rem);
+            --fs-highlight-strong: clamp(0.9rem, 3.7vw, 1rem);
+            --fs-user-name: clamp(0.85rem, 3.5vw, 0.9rem);
+            --fs-user-time: clamp(0.7rem, 2.8vw, 0.75rem);
+            --fs-user-preview: clamp(0.8rem, 3.3vw, 0.85rem);
+            --fs-gallery-caption: clamp(0.7rem, 2.8vw, 0.78rem);
+            --fs-nav-text: clamp(0.62rem, 2.6vw, 0.7rem);
+            --fs-nav-icon: clamp(1rem, 4.5vw, 1.2rem);
+            /* 响应式间距 */
+            --gap-sm: clamp(6px, 2vw, 8px);
+            --gap-md: clamp(8px, 2.5vw, 10px);
+            --gap-lg: clamp(10px, 3vw, 12px);
+            --pad-content-x: clamp(12px, 4vw, 16px);
+            --pad-card: clamp(14px, 4.5vw, 18px);
+            --pad-card-sm: clamp(10px, 3vw, 12px);
+            --mar-card: clamp(12px, 4vw, 16px);
+            --mar-title-bottom: clamp(8px, 2.5vw, 12px);
+            --nav-height: clamp(56px, 15vw, 64px);
+            --banner-height: clamp(160px, 50vw, 220px);
+            --header-height: clamp(44px, 12vw, 48px);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--green-bg);
+            color: var(--green-dark);
+            line-height: 1.7;
+            padding-bottom: calc(var(--nav-height) + 10px);
+            -webkit-overflow-scrolling: touch;
+            font-size: var(--fs-body);
+        }
+
+        /* 顶部标题栏 */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(30, 107, 74, 0.1);
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .app-header h1 {
+            font-size: var(--fs-page-title);
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+
+        .app-header .back-btn {
+            position: absolute;
+            left: clamp(8px, 2.5vw, 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            width: clamp(32px, 9vw, 36px);
+            height: clamp(32px, 9vw, 36px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green-dark);
+            font-size: clamp(0.95rem, 4vw, 1.1rem);
+            border-radius: 50%;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .app-header .back-btn:active {
+            background: var(--green-pale);
+        }
+
+        /* 顶部banner */
+        .banner {
+            position: relative;
+            height: var(--banner-height);
+            overflow: hidden;
+        }
+
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: clamp(40px, 12vw, 60px);
+            background: linear-gradient(transparent, var(--green-bg));
+        }
+
+        .banner-title {
+            position: absolute;
+            bottom: clamp(12px, 4vw, 20px);
+            left: var(--pad-content-x);
+            right: var(--pad-content-x);
+            color: #fff;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .banner-title h2 {
+            font-size: var(--fs-banner-title);
+            font-weight: 800;
+            margin-bottom: clamp(2px, 0.8vw, 4px);
+        }
+
+        .banner-title p {
+            font-size: var(--fs-banner-sub);
+            opacity: 0.9;
+        }
+
+        /* 内容区 */
+        .content {
+            padding: 0 var(--pad-content-x);
+            margin-top: clamp(-14px, -4vw, -20px);
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Tab 切换 */
+        .tab-bar {
+            display: flex;
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: clamp(3px, 1vw, 4px);
+            margin-bottom: var(--mar-card);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: calc(var(--header-height) + 4px);
+            z-index: 90;
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: clamp(8px, 2.5vw, 10px) 0;
+            font-size: var(--fs-tab);
+            font-weight: 600;
+            color: #888;
+            border-radius: 10px;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+
+        .tab-item.active {
+            background: var(--green-bright);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(58, 155, 110, 0.3);
+        }
+
+        .tab-item:active:not(.active) {
+            background: var(--green-pale);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片 */
+        .card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: var(--pad-card);
+            margin-bottom: var(--mar-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-title {
+            font-size: var(--fs-card-title);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: var(--mar-title-bottom);
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm);
+        }
+
+        .card-title i {
+            color: var(--green-bright);
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
+        }
+
+        .card-text {
+            font-size: var(--fs-body);
+            color: #555;
+            line-height: 1.8;
+            text-align: justify;
+            text-indent: 2em;
+            margin-bottom: var(--mar-title-bottom);
+        }
+
+        .card-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 数据网格 */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--gap-md);
+            margin: var(--mar-title-bottom) 0;
+        }
+
+        .data-item {
+            background: linear-gradient(135deg, var(--green-bright), var(--green-mid));
+            border-radius: var(--radius-sm);
+            padding: clamp(12px, 3.5vw, 16px) clamp(8px, 2.5vw, 12px);
+            text-align: center;
+            color: #fff;
+        }
+
+        .data-item:nth-child(2) { background: linear-gradient(135deg, #c9a84c, #a88a32); }
+        .data-item:nth-child(3) { background: linear-gradient(135deg, #e57373, #c62828); }
+        .data-item:nth-child(4) { background: linear-gradient(135deg, #64b5f6, #1976d2); }
+
+        .data-number {
+            font-size: var(--fs-data-num);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: clamp(4px, 1.5vw, 6px);
+        }
+
+        .data-label {
+            font-size: var(--fs-small);
+            opacity: 0.9;
+        }
+
+        /* 图片画廊 */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--gap-md);
+            margin-top: var(--mar-title-bottom);
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+            display: block;
+        }
+
+        .gallery-item:active img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: clamp(16px, 5vw, 20px) clamp(8px, 2.5vw, 10px) clamp(6px, 2vw, 8px);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: #fff;
+            font-size: var(--fs-gallery-caption);
+        }
+
+        /* 高亮框 */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--green-bright) 0%, var(--green-mid) 100%);
+            color: #fff;
+            padding: var(--pad-card-sm) var(--pad-card);
+            border-radius: var(--radius-md);
+            margin: var(--mar-title-bottom) 0;
+            font-size: var(--fs-highlight);
+            line-height: 1.8;
+            box-shadow: var(--shadow-md);
+        }
+
+        .highlight-box strong {
+            display: block;
+            font-size: var(--fs-highlight-strong);
+            margin-bottom: clamp(4px, 1.5vw, 6px);
+            color: var(--gold-light);
+        }
+
+        /* 现场反响 */
+        .social-section {
+            margin-top: var(--mar-card);
+        }
+
+        .social-feed {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-md);
+        }
+
+        .user-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: clamp(12px, 3.5vw, 14px);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .user-card:active {
+            transform: scale(0.98);
+        }
+
+        .user-card.active {
+            border: 2px solid var(--green-bright);
+        }
+
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm);
+            margin-bottom: var(--gap-md);
+        }
+
+        .user-avatar {
+            width: clamp(34px, 9vw, 40px);
+            height: clamp(34px, 9vw, 40px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            flex-shrink: 0;
+        }
+
+        .user-card:nth-child(1) .user-avatar { background: #e57373; }
+        .user-card:nth-child(2) .user-avatar { background: #4ecdc4; }
+        .user-card:nth-child(3) .user-avatar { background: #81c784; }
+        .user-card:nth-child(4) .user-avatar { background: #ffb74d; }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: var(--fs-user-name);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: 2px;
+        }
+
+        .user-time {
+            font-size: var(--fs-user-time);
+            color: #999;
+        }
+
+        .user-preview {
+            font-size: var(--fs-user-preview);
+            color: #666;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .user-images {
+            display: flex;
+            gap: clamp(4px, 1.5vw, 6px);
+            margin-top: var(--gap-md);
+        }
+
+        .user-images img {
+            width: clamp(42px, 13vw, 50px);
+            height: clamp(42px, 13vw, 50px);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        /* 详情面板 */
+        .detail-panel {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: var(--pad-card-sm);
+            margin-top: var(--mar-card);
+            box-shadow: var(--shadow-md);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .detail-panel.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-slider {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: #eee;
+            margin-bottom: var(--gap-md);
+        }
+
+        .detail-slider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: clamp(30px, 8vw, 36px);
+            height: clamp(30px, 8vw, 36px);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .slider-btn.prev { left: clamp(6px, 2vw, 8px); }
+        .slider-btn.next { right: clamp(6px, 2vw, 8px); }
+
+        .slider-dots {
+            position: absolute;
+            bottom: clamp(6px, 2vw, 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: clamp(4px, 1.5vw, 6px);
+            z-index: 5;
+        }
+
+        .slider-dot {
+            width: clamp(6px, 2vw, 8px);
+            height: clamp(6px, 2vw, 8px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .slider-dot.active {
+            background: #fff;
+            width: clamp(16px, 5vw, 20px);
+            border-radius: 4px;
+        }
+
+        .detail-text {
+            font-size: var(--fs-body);
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* 图片查看模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: clamp(14px, 4vw, 20px);
+            right: clamp(12px, 3.5vw, 16px);
+            width: clamp(34px, 9vw, 40px);
+            height: clamp(34px, 9vw, 40px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            font-size: clamp(1rem, 4.2vw, 1.2rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            padding-bottom: env(safe-area-inset-bottom);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border-top: 1px solid rgba(30, 107, 74, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(15, 59, 42, 0.06);
+        }
+
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #999;
+            font-size: var(--fs-nav-text);
+            gap: clamp(2px, 0.8vw, 3px);
+            transition: color 0.2s;
+            height: 100%;
+        }
+
+        .bottom-nav-item i { font-size: var(--fs-nav-icon); }
+
+        .bottom-nav-item.active {
+            color: var(--green-bright);
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: calc(var(--nav-height) + clamp(8px, 2.5vw, 12px));
+            right: var(--pad-content-x);
+            width: clamp(36px, 10vw, 42px);
+            height: clamp(36px, 10vw, 42px);
+            border-radius: 50%;
+            background: var(--green-bright);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--green-light); border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题栏 -->
+    <header class="app-header">
+        <button class="back-btn" onclick="history.back()" aria-label="返回">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <h1>赛事概览</h1>
+    </header>
+
+    <!-- Banner -->
+    <div class="banner">
+        <img src="../competition-overview-page/2.JPG" alt="赛事banner">
+        <div class="banner-title">
+            <h2>2026大运河龙舟赛</h2>
+            <p>北京·昌平站 · 6月6日-7日</p>
+        </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="content">
+        <!-- Tab 切换 -->
+        <div class="tab-bar">
+            <div class="tab-item active" data-tab="overview">赛事概况</div>
+            <div class="tab-item" data-tab="teams">参赛队伍</div>
+            <div class="tab-item" data-tab="social">现场反响</div>
+        </div>
+
+        <!-- 赛事概况 -->
+        <div class="tab-content active" id="tab-overview">
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-fire"></i>赛事盛况</h3>
+                <p class="card-text">龙舟竞渡，浪花齐天。2026年6月6日至7日，2026年"行走大运河"中国辉煌足迹大运河龙舟系列活动主会场（北京·昌平站）暨第二届全国全民健身大赛（华北区北京昌平站）龙舟比赛在北京市昌平区十三陵水库北岸飞人基地举行。</p>
+                <p class="card-text">赛事为期两天，由国家体育总局社会体育指导中心、中国龙舟协会、央视网、北京市体育局、北京市昌平区人民政府主办，充分彰显文化传承、产业升级、区域协同、体育促消费四大核心价值。</p>
+                <div class="gallery">
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/2.JPG')">
+                        <img src="../competition-overview-page/2.JPG" alt="开幕式表演">
+                        <div class="gallery-caption">开幕式表演</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/9.JPG')">
+                        <img src="../competition-overview-page/9.JPG" alt="赛场起点">
+                        <div class="gallery-caption">赛场起点</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/5.JPG')">
+                        <img src="../competition-overview-page/5.JPG" alt="赛场风采">
+                        <div class="gallery-caption">赛场风采</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/1.JPG')">
+                        <img src="../competition-overview-page/1.JPG" alt="选手背影">
+                        <div class="gallery-caption">选手背影</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-map-marker-alt"></i>赛事场地</h3>
+                <p class="card-text">北京市是京杭大运河北起点，而昌平区则是北京唯一同时涵盖大运河、长城、西山永定河三大文化带的区域，拥有大运河源头白浮泉遗址、明十三陵、居庸关长城等重量级文旅资源。</p>
+                <p class="card-text">十三陵水库北岸飞人基地的水域开阔平稳，水质优良清澈，器材配备完善，背靠青山、面朝碧波，兼具生态景观与赛事活动功能。</p>
+                <div class="gallery">
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/13.JPG')">
+                        <img src="../competition-overview-page/13.JPG" alt="赛场风采">
+                        <div class="gallery-caption">赛场风采</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/10.JPG')">
+                        <img src="../competition-overview-page/10.JPG" alt="水库风貌">
+                        <div class="gallery-caption">水库风貌</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-microphone"></i>领导致辞</h3>
+                <div class="gallery">
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/8.JPG')">
+                        <img src="../competition-overview-page/8.JPG" alt="画龙点睛">
+                        <div class="gallery-caption">画龙点睛</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/12.JPG')">
+                        <img src="../competition-overview-page/12.JPG" alt="领导致辞">
+                        <div class="gallery-caption">领导致辞</div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <strong>昌平区体育局局长马源洪表示：</strong>
+                    本次赛事将明文化底蕴、水库生态优势与水上赛事场景融为一体，打造"观龙舟、赏生态、品文脉、享运动"的沉浸式体验，推动文体旅深度融合，为首都群众体育与传统体育传承发展注入新活力。
+                </div>
+            </div>
+        </div>
+
+        <!-- 参赛队伍 -->
+        <div class="tab-content" id="tab-teams">
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-users"></i>参赛规模</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <div class="data-number">45</div>
+                        <div class="data-label">支参赛队伍</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-number">2</div>
+                        <div class="data-label">大组别</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-number">8</div>
+                        <div class="data-label">沿线省市</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-number">2+</div>
+                        <div class="data-label">海外代表</div>
+                    </div>
+                </div>
+                <p class="card-text">本次赛事共集结45支参赛队伍，分设公开组、大众组两大组别，兼具专业性与竞技性。</p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-globe-asia"></i>五湖四海</h3>
+                <p class="card-text">作为赛事主场，北京昌平十三陵水库打破了地域限制：龙舟健儿们来自五湖四海——大运河沿线八省市，俄罗斯、新加坡等海外代表，以及首都高校、企事业单位、民间社会组织……各路选手以舟会友、以桨逐梦，于碧波万顷的京杭大运河上划开了一道崭新篇章。</p>
+                <div class="gallery">
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/4.JPG')">
+                        <img src="../competition-overview-page/4.JPG" alt="赛场准备">
+                        <div class="gallery-caption">赛场准备</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/7.JPG')">
+                        <img src="../competition-overview-page/7.JPG" alt="比赛队伍">
+                        <div class="gallery-caption">比赛队伍</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/11.JPG')">
+                        <img src="../competition-overview-page/11.JPG" alt="选手风采">
+                        <div class="gallery-caption">选手风采</div>
+                    </div>
+                    <div class="gallery-item" onclick="openModal('../competition-overview-page/6.JPG')">
+                        <img src="../competition-overview-page/6.JPG" alt="开幕式">
+                        <div class="gallery-caption">开幕式</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 现场反响 -->
+        <div class="tab-content" id="tab-social">
+            <div class="social-section">
+                <div class="social-feed" id="userList">
+                    <div class="user-card" data-user="0">
+                        <div class="user-header">
+                            <div class="user-avatar"><i class="fas fa-user"></i></div>
+                            <div class="user-info">
+                                <div class="user-name">@死手快划啊！</div>
+                                <div class="user-time">6月6日 12:05</div>
+                            </div>
+                        </div>
+                        <div class="user-preview">预报说今天阴，结果雨越下越大。体感很冷，划起来反而更清醒……</div>
+                        <div class="user-images">
+                            <img src="../competition-overview-page/现场反响/1 (1).jpg" alt="">
+                            <img src="../competition-overview-page/现场反响/1 (2).jpg" alt="">
+                            <img src="../competition-overview-page/现场反响/1 (3).jpg" alt="">
+                        </div>
+                    </div>
+
+                    <div class="user-card" data-user="1">
+                        <div class="user-header">
+                            <div class="user-avatar"><i class="fas fa-hands-helping"></i></div>
+                            <div class="user-info">
+                                <div class="user-name">@志愿小林</div>
+                                <div class="user-time">6月6日 12:20</div>
+                            </div>
+                        </div>
+                        <div class="user-preview">早上一看天色不对，群里立马就有雨天的方案。虽然气温低，但搬物资、发雨衣也能忙出一身汗……</div>
+                        <div class="user-images">
+                            <img src="../competition-overview-page/现场反响/2 (1).jpg" alt="">
+                            <img src="../competition-overview-page/现场反响/2 (2).jpg" alt="">
+                            <img src="../competition-overview-page/现场反响/2 (3).jpg" alt="">
+                        </div>
+                    </div>
+
+                    <div class="user-card" data-user="2">
+                        <div class="user-header">
+                            <div class="user-avatar"><i class="fas fa-child"></i></div>
+                            <div class="user-info">
+                                <div class="user-name">@悠然宝爸</div>
+                                <div class="user-time">6月6日 11:15</div>
+                            </div>
+                        </div>
+                        <div class="user-preview">雨中观赛体验拉满！冒雨带娃打卡龙舟盛会，冷风细雨也没能冲淡现场热情……</div>
+                        <div class="user-images">
+                            <img src="../competition-overview-page/现场反响/3 (1).jpg" alt="">
+                            <img src="../competition-overview-page/现场反响/3 (2).jpg" alt="">
+                            <img src="../competition-overview-page/现场反响/3 (3).jpg" alt="">
+                        </div>
+                    </div>
+
+                    <div class="user-card" data-user="3">
+                        <div class="user-header">
+                            <div class="user-avatar"><i class="fas fa-heart"></i></div>
+                            <div class="user-info">
+                                <div class="user-name">@岁月安然</div>
+                                <div class="user-time">6月6日 13:15</div>
+                            </div>
+                        </div>
+                        <div class="user-preview">早早就备好装备想上场参赛，奈何队伍名额已满，只能在岸边观战咯……</div>
+                        <div class="user-images">
+                            <img src="../competition-overview-page/现场反响/4.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-panel" id="detailPanel">
+                    <div class="detail-slider">
+                        <button class="slider-btn prev" onclick="prevImage(event)"><i class="fas fa-chevron-left"></i></button>
+                        <img id="detailImg" src="" alt="详情图" onclick="openModal(this.src)">
+                        <button class="slider-btn next" onclick="nextImage(event)"><i class="fas fa-chevron-right"></i></button>
+                        <div class="slider-dots" id="sliderDots"></div>
+                    </div>
+                    <div class="detail-text" id="detailText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="competition-overview.html" class="bottom-nav-item active">
+            <i class="fas fa-flag"></i>
+            <span>赛事</span>
+        </a>
+        <a href="game-experience.html" class="bottom-nav-item">
+            <i class="fas fa-gamepad"></i>
+            <span>游戏</span>
+        </a>
+        <a href="canal-scenery.html" class="bottom-nav-item">
+            <i class="fas fa-image"></i>
+            <span>风光</span>
+        </a>
+        <a href="glories-in-statistics.html" class="bottom-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>数据</span>
+        </a>
+    </nav>
+
+    <!-- 返回顶部 -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 图片模态框 -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <img id="modalImg" src="" alt="预览">
+    </div>
+
+    <script>
+        // Tab 切换
+        const tabItems = document.querySelectorAll('.tab-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+                tabItems.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + tab).classList.add('active');
+            });
+        });
+
+        // 用户数据
+        const users = [
+            {
+                name: '@死手快划啊！',
+                time: '2026年6月6日 12:05',
+                content: '预报说今天阴，结果雨越下越大。体感很冷，划起来反而更清醒。雨点砸在脸上，比太阳晒还疼啊，最后50米视线全是水汽，都快看不清了，全凭肌肉记忆在划，被雨天上了一课！',
+                images: ['现场反响/1 (1).jpg', '现场反响/1 (2).jpg', '现场反响/1 (3).jpg']
+            },
+            {
+                name: '@志愿小林',
+                time: '2026年6月6日 12:20',
+                content: '早上一看天色不对，群里立马就有雨天的方案。虽然气温低，但搬物资、发雨衣也能忙出一身汗。看着运动员浑身湿透还在笑着热身，咱这志愿者也得支棱起来啊！',
+                images: ['现场反响/2 (1).jpg', '现场反响/2 (2).jpg', '现场反响/2 (3).jpg', '现场反响/2 (4).jpg']
+            },
+            {
+                name: '@悠然宝爸',
+                time: '2026年6月6日 11:15',
+                content: '雨中观赛体验拉满！冒雨带娃打卡龙舟盛会，冷风细雨也没能冲淡现场热情，还有机器人参赛呢！娃儿看得目不转睛，一直喊着加油，风雨也挡不住赛场的热闹氛围，这趟出行太值了！',
+                images: ['现场反响/3 (1).jpg', '现场反响/3 (2).jpg', '现场反响/3 (3).jpg', '现场反响/3 (4).jpg']
+            },
+            {
+                name: '@岁月安然',
+                time: '2026年6月6日 13:15',
+                content: '早早就备好装备想上场参赛，奈何队伍名额已满，只能在岸边观战咯。雨下得不小，看着大家在风雨里奋力划桨，心里也跟着热血沸腾，也算圆了我的龙舟梦啦~为每一支队伍加油！',
+                images: ['现场反响/4.jpg']
+            }
+        ];
+
+        let currentUserIndex = 0;
+        let currentImageIndex = 0;
+        let currentImages = [];
+
+        // 用户卡片点击
+        document.querySelectorAll('.user-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.user);
+                showUserDetail(idx);
+                document.querySelectorAll('.user-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function showUserDetail(index) {
+            currentUserIndex = index;
+            currentImageIndex = 0;
+            currentImages = users[index].images.map(img => '../competition-overview-page/' + img);
+            
+            const panel = document.getElementById('detailPanel');
+            const detailImg = document.getElementById('detailImg');
+            const detailText = document.getElementById('detailText');
+            const dots = document.getElementById('sliderDots');
+
+            detailImg.src = currentImages[0];
+            detailText.textContent = users[index].content;
+
+            dots.innerHTML = '';
+            currentImages.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = (e) => { e.stopPropagation(); setImage(i); };
+                dots.appendChild(dot);
+            });
+
+            panel.classList.add('show');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function prevImage(e) {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            updateSlider();
+        }
+
+        function nextImage(e) {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            updateSlider();
+        }
+
+        function setImage(index) {
+            currentImageIndex = index;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            document.getElementById('detailImg').src = currentImages[currentImageIndex];
+            document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentImageIndex);
+            });
+        }
+
+        // 图片模态框
+        function openModal(src) {
+            document.getElementById('modalImg').src = src;
+            document.getElementById('imageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // 返回顶部
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            backToTop.classList.toggle('show', window.scrollY > 300);
+        });
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 图片淡入效果
+        document.querySelectorAll('img').forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.4s ease';
+            img.onload = function() { this.style.opacity = '1'; };
+            if (img.complete) img.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>

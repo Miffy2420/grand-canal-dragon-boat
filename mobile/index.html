@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>2026中国辉煌足迹大运河龙舟活动</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --green-dark: #0f3b2a;
+            --green-mid: #1e6b4a;
+            --green-bright: #3a9b6e;
+            --green-light: #7bc6a0;
+            --green-pale: #d4eee0;
+            --green-bg: #eaf8f0;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --cream: #fdfcf7;
+            --shadow-sm: 0 4px 12px rgba(15, 59, 42, 0.08);
+            --shadow-md: 0 8px 24px rgba(15, 59, 42, 0.12);
+            --shadow-lg: 0 16px 40px rgba(15, 59, 42, 0.18);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+
+            /* 自适应字体尺寸 */
+            --fs-title-lg: clamp(1.4rem, 5.5vw, 1.8rem);
+            --fs-title-md: clamp(1rem, 4vw, 1.25rem);
+            --fs-body: clamp(0.85rem, 3.5vw, 0.95rem);
+            --fs-small: clamp(0.72rem, 3vw, 0.8rem);
+            --fs-xsmall: clamp(0.6rem, 2.5vw, 0.7rem);
+            --fs-number: clamp(1.5rem, 6vw, 1.8rem);
+            --fs-icon-lg: clamp(2.2rem, 9vw, 3rem);
+            --fs-icon-md: clamp(1.1rem, 4.5vw, 1.4rem);
+            --fs-icon-sm: clamp(1rem, 4vw, 1.2rem);
+
+            /* 自适应间距 */
+            --sp-xs: clamp(4px, 1vw, 6px);
+            --sp-sm: clamp(8px, 2.5vw, 12px);
+            --sp-md: clamp(12px, 3.5vw, 16px);
+            --sp-lg: clamp(16px, 5vw, 24px);
+            --sp-xl: clamp(24px, 7vw, 32px);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background-color: var(--green-bg);
+            color: var(--green-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: clamp(60px, 16vw, 80px);
+        }
+
+        /* ===== 顶部状态栏占位 ===== */
+        .status-bar {
+            height: env(safe-area-inset-top);
+            background: transparent;
+        }
+
+        /* ===== Hero 封面区 ===== */
+        .hero {
+            position: relative;
+            height: clamp(380px, 65vh, 520px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: url('../navigation-page/封面图.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(15, 59, 42, 0.3) 0%, rgba(30, 107, 74, 0.4) 40%, rgba(58, 155, 110, 0.5) 100%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: clamp(60px, 15vw, 80px);
+            background: var(--green-bg);
+            clip-path: ellipse(60% 100% at 50% 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 0 var(--sp-md);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-icon {
+            margin-bottom: var(--sp-md);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-icon i {
+            font-size: var(--fs-icon-lg);
+            color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(201, 168, 76, 0.5);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-title {
+            font-size: var(--fs-title-lg);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: clamp(1px, 0.8vw, 2px);
+            line-height: 1.4;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.35);
+            margin-bottom: var(--sp-sm);
+        }
+
+        .hero-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--sp-sm);
+            margin: var(--sp-sm) 0;
+        }
+
+        .divider-dot {
+            width: clamp(6px, 2vw, 8px);
+            height: clamp(6px, 2vw, 8px);
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(201, 168, 76, 0.6);
+        }
+
+        .divider-line {
+            width: clamp(30px, 10vw, 40px);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+
+        .hero-subtitle {
+            font-size: var(--fs-body);
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: clamp(1px, 0.8vw, 2px);
+            font-weight: 500;
+        }
+
+        .hero-scroll-hint {
+            position: absolute;
+            bottom: clamp(20px, 6vw, 30px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: var(--fs-small);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--sp-xs);
+            animation: bounce 2s infinite;
+        }
+
+        .hero-scroll-hint i {
+            font-size: var(--fs-title-md);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-8px); }
+            60% { transform: translateX(-50%) translateY(-4px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== 快速导航卡片 ===== */
+        .quick-nav {
+            position: relative;
+            z-index: 10;
+            margin-top: clamp(-30px, -8vw, -40px);
+            padding: 0 var(--sp-md);
+        }
+
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--sp-sm);
+        }
+
+        .nav-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: var(--sp-md) var(--sp-sm);
+            text-align: center;
+            text-decoration: none;
+            color: var(--green-dark);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card:active {
+            transform: scale(0.96);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-card-icon {
+            width: clamp(38px, 12vw, 48px);
+            height: clamp(38px, 12vw, 48px);
+            margin: 0 auto var(--sp-sm);
+            border-radius: clamp(10px, 3.5vw, 14px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fs-icon-md);
+            color: #fff;
+        }
+
+        .nav-card:nth-child(1) .nav-card-icon { background: linear-gradient(135deg, #3a9b6e, #1e6b4a); }
+        .nav-card:nth-child(2) .nav-card-icon { background: linear-gradient(135deg, #c9a84c, #a88a32); }
+        .nav-card:nth-child(3) .nav-card-icon { background: linear-gradient(135deg, #e57373, #c62828); }
+        .nav-card:nth-child(4) .nav-card-icon { background: linear-gradient(135deg, #64b5f6, #1976d2); }
+        .nav-card:nth-child(5) .nav-card-icon { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
+
+        .nav-card-title {
+            font-size: var(--fs-body);
+            font-weight: 700;
+            margin-bottom: var(--sp-xs);
+        }
+
+        .nav-card-desc {
+            font-size: var(--fs-small);
+            color: #888;
+        }
+
+        .nav-card-badge {
+            position: absolute;
+            top: var(--sp-xs);
+            right: var(--sp-xs);
+            background: var(--gold);
+            color: #fff;
+            font-size: var(--fs-xsmall);
+            padding: 2px clamp(6px, 2vw, 8px);
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* ===== 内容板块 ===== */
+        .section {
+            padding: var(--sp-lg) var(--sp-md);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--sp-md);
+        }
+
+        .section-title {
+            font-size: var(--fs-title-md);
+            font-weight: 800;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            gap: var(--sp-xs);
+        }
+
+        .section-title::before {
+            content: '';
+            width: clamp(3px, 1vw, 4px);
+            height: clamp(16px, 5vw, 20px);
+            background: linear-gradient(180deg, var(--green-bright), var(--green-mid));
+            border-radius: 2px;
+        }
+
+        .section-more {
+            font-size: var(--fs-small);
+            color: var(--green-bright);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--sp-xs);
+        }
+
+        /* ===== 精选图片 ===== */
+        .highlight-gallery {
+            display: flex;
+            gap: var(--sp-sm);
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 calc(-1 * var(--sp-md));
+            padding-left: var(--sp-md);
+            padding-right: var(--sp-md);
+        }
+
+        .highlight-gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        .highlight-card {
+            flex-shrink: 0;
+            width: clamp(220px, 70vw, 280px);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            scroll-snap-align: start;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .highlight-card img {
+            width: 100%;
+            height: clamp(140px, 45vw, 180px);
+            object-fit: cover;
+            display: block;
+        }
+
+        .highlight-card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: clamp(24px, 8vw, 30px) var(--sp-sm) var(--sp-sm);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+            color: #fff;
+        }
+
+        .highlight-card-title {
+            font-size: var(--fs-body);
+            font-weight: 700;
+            margin-bottom: var(--sp-xs);
+        }
+
+        .highlight-card-sub {
+            font-size: var(--fs-small);
+            opacity: 0.85;
+        }
+
+        /* ===== 数据概览 ===== */
+        .stats-strip {
+            background: linear-gradient(135deg, var(--green-mid), var(--green-bright));
+            border-radius: var(--radius-lg);
+            padding: var(--sp-lg) var(--sp-md);
+            margin: 0 var(--sp-md);
+            color: #fff;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stats-strip-title {
+            text-align: center;
+            font-size: var(--fs-title-md);
+            font-weight: 600;
+            margin-bottom: var(--sp-md);
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--sp-sm);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: var(--fs-number);
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1;
+            margin-bottom: var(--sp-xs);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-label {
+            font-size: var(--fs-small);
+            opacity: 0.85;
+        }
+
+        /* ===== 底部导航栏 ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: clamp(52px, 14vw, 65px);
+            padding-bottom: env(safe-area-inset-bottom);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border-top: 1px solid rgba(30, 107, 74, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(15, 59, 42, 0.06);
+        }
+
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #999;
+            font-size: var(--fs-xsmall);
+            gap: var(--sp-xs);
+            transition: color 0.2s;
+            height: 100%;
+        }
+
+        .bottom-nav-item i {
+            font-size: var(--fs-icon-sm);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--green-bright);
+        }
+
+        .bottom-nav-item:active {
+            opacity: 0.7;
+        }
+
+        /* ===== 返回顶部 ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: clamp(68px, 18vw, 90px);
+            right: var(--sp-md);
+            width: clamp(36px, 10vw, 44px);
+            height: clamp(36px, 10vw, 44px);
+            border-radius: 50%;
+            background: var(--green-bright);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+            border: none;
+            cursor: pointer;
+            font-size: var(--fs-small);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:active {
+            transform: scale(0.9);
+        }
+
+        /* ===== 滚动条美化 ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--green-light);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar"></div>
+
+    <!-- ===== Hero 封面 ===== -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-icon"><i class="fas fa-dragon"></i></div>
+            <h1 class="hero-title">千帆竞渡争辉煌<br>运河风光续新章</h1>
+            <div class="hero-divider">
+                <span class="divider-dot"></span>
+                <span class="divider-line"></span>
+                <span class="divider-dot"></span>
+            </div>
+            <p class="hero-subtitle">2026 中国辉煌足迹大运河龙舟活动</p>
+        </div>
+        <div class="hero-scroll-hint">
+            <span>下滑探索</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- ===== 快速导航 ===== -->
+    <section class="quick-nav">
+        <div class="nav-cards">
+            <a href="competition-overview.html" class="nav-card">
+                <div class="nav-card-icon"><i class="fas fa-flag-checkered"></i></div>
+                <div class="nav-card-title">赛事概览</div>
+                <div class="nav-card-desc">了解赛事详情</div>
+                <div class="nav-card-badge">HOT</div>
+            </a>
+            <a href="game-experience.html" class="nav-card">
+                <div class="nav-card-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="nav-card-title">游戏体验</div>
+                <div class="nav-card-desc">趣味云竞渡</div>
+            </a>
+            <a href="glories-in-statistics.html" class="nav-card">
+                <div class="nav-card-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="nav-card-title">数说辉煌</div>
+                <div class="nav-card-desc">数据看影响力</div>
+            </a>
+            <a href="canal-scenery.html" class="nav-card">
+                <div class="nav-card-icon"><i class="fas fa-mountain"></i></div>
+                <div class="nav-card-title">运河风光</div>
+                <div class="nav-card-desc">八省市美景</div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ===== 数据概览 ===== -->
+    <div class="stats-strip" style="margin-top: clamp(16px, 5vw, 24px);">
+        <div class="stats-strip-title">2026 赛事核心数据</div>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">45</div>
+                <div class="stat-label">参赛队伍</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">600+</div>
+                <div class="stat-label">参赛人数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">8</div>
+                <div class="stat-label">沿线省市</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 精彩瞬间 ===== -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">精彩瞬间</h2>
+            <a href="competition-overview.html" class="section-more">查看更多 <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="highlight-gallery">
+            <div class="highlight-card">
+                <img src="../competition-overview-page/2.JPG" alt="开幕式表演">
+                <div class="highlight-card-info">
+                    <div class="highlight-card-title">开幕式表演</div>
+                    <div class="highlight-card-sub">雨中盛会，热情不减</div>
+                </div>
+            </div>
+            <div class="highlight-card">
+                <img src="../competition-overview-page/5.JPG" alt="赛场风采">
+                <div class="highlight-card-info">
+                    <div class="highlight-card-title">赛场风采</div>
+                    <div class="highlight-card-sub">劈波斩浪，奋勇争先</div>
+                </div>
+            </div>
+            <div class="highlight-card">
+                <img src="../glories-in-statistics-page/机器人队 抵达起点.JPG" alt="机器人队">
+                <div class="highlight-card-info">
+                    <div class="highlight-card-title">机器人参赛</div>
+                    <div class="highlight-card-sub">科技融合传统</div>
+                </div>
+            </div>
+            <div class="highlight-card">
+                <img src="../competition-overview-page/11.JPG" alt="选手风采">
+                <div class="highlight-card-info">
+                    <div class="highlight-card-title">选手风采</div>
+                    <div class="highlight-card-sub">齐心协力，共创佳绩</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 底部导航 ===== -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="competition-overview.html" class="bottom-nav-item">
+            <i class="fas fa-flag"></i>
+            <span>赛事</span>
+        </a>
+        <a href="game-experience.html" class="bottom-nav-item">
+            <i class="fas fa-gamepad"></i>
+            <span>游戏</span>
+        </a>
+        <a href="canal-scenery.html" class="bottom-nav-item">
+            <i class="fas fa-image"></i>
+            <span>风光</span>
+        </a>
+        <a href="glories-in-statistics.html" class="bottom-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>数据</span>
+        </a>
+    </nav>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 返回顶部
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 图片懒加载效果（简单淡入）
+        document.querySelectorAll('img').forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.5s ease';
+            img.onload = function() {
+                this.style.opacity = '1';
+            };
+            if (img.complete) img.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
